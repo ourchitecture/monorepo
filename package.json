@@ -1,25 +1,32 @@
 {
-  "author": "@ourchitectureio <97544811+ourchitectureio@users.noreply.github.com>",
-  "bugs": {
-    "url": "https://github.com/ourchitecture/monorepo/issues/"
-  },
-  "description": "The single repository for all things related to Ourchitecture.",
-  "engines": {
-    "node": ">=20.11.1 <21.0.0",
-    "npm": ">=10.4.0",
-    "yarn": ">=1.22.21"
-  },
-  "homepage": "https://github.com/ourchitecture/monorepo/",
-  "license": "MIT OR CC0-1.0",
-  "main": "",
-  "name": "@ourchitecture/monorepo",
-  "packageManager": "yarn@4.1.0",
-  "private": true,
-  "repository": "https://github.com/ourchitecture/monorepo/",
-  "version": "1.0.0",
-  "workspaces": {
-    "packages": [
-      "src/**/*"
-    ]
-  }
+    "author": "@ourchitectureio <97544811+ourchitectureio@users.noreply.github.com>",
+    "bugs": {
+        "url": "https://github.com/ourchitecture/monorepo/issues/"
+    },
+    "description": "The single repository for all things related to Ourchitecture.",
+    "engines": {
+        "node": ">=20.11.1 <21.0.0",
+        "npm": ">=10.4.0",
+        "yarn": ">=1.22.21"
+    },
+    "homepage": "https://github.com/ourchitecture/monorepo/",
+    "license": "MIT OR CC0-1.0",
+    "main": "",
+    "name": "@ourchitecture/monorepo",
+    "packageManager": "yarn@4.1.0",
+    "private": true,
+    "repository": "https://github.com/ourchitecture/monorepo/",
+    "scripts": {
+        "format": "prettier --write .",
+        "lint": "prettier --check ."
+    },
+    "version": "1.0.0",
+    "workspaces": {
+        "packages": [
+            "src/**/*"
+        ]
+    },
+    "devDependencies": {
+        "prettier": "^3.2.5"
+    }
 }
