@@ -18,7 +18,8 @@
     "repository": "https://github.com/ourchitecture/monorepo/",
     "scripts": {
         "format": "prettier --write .",
-        "lint": "prettier --check ."
+        "lint": "prettier --check .",
+        "lint:md": "markdownlint-cli2"
     },
     "version": "1.0.0",
     "workspaces": {
@@ -27,6 +28,7 @@
         ]
     },
     "devDependencies": {
+        "markdownlint-cli2": "^0.12.1",
         "prettier": "^3.2.5"
     }
 }
