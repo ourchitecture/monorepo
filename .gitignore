@@ -114,3 +114,5 @@ $RECYCLE.BIN/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+.wireit/*

@@ -18,10 +18,23 @@
     "repository": "https://github.com/ourchitecture/monorepo/",
     "scripts": {
         "format": "prettier --write .",
-        "lint": "prettier --check .",
-        "lint:md": "markdownlint-cli2"
+        "lint:md": "wireit",
+        "lint:prettier": "wireit",
+        "lint": "wireit"
     },
     "version": "1.0.0",
+    "wireit": {
+      "lint:md": {
+        "command": "markdownlint-cli2",
+        "files": ["src/**/*.md"]
+      },
+      "lint:prettier": {
+        "command": "prettier --check ."
+      },
+      "lint": {
+        "dependencies": ["lint:md", "lint:prettier"]
+      }
+    },
     "workspaces": {
         "packages": [
             "src/**/*"
@@ -29,6 +42,7 @@
     },
     "devDependencies": {
         "markdownlint-cli2": "^0.12.1",
-        "prettier": "^3.2.5"
+        "prettier": "^3.2.5",
+        "wireit": "^0.14.4"
     }
 }
