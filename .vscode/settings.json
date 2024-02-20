@@ -16,7 +16,6 @@
     "[ignore][shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
-    "typescript.tsdk": "./node_modules/typescript/lib",
     "[properties]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },

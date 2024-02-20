@@ -24,16 +24,21 @@
     },
     "version": "1.0.0",
     "wireit": {
-      "lint:md": {
-        "command": "markdownlint-cli2",
-        "files": ["src/**/*.md"]
-      },
-      "lint:prettier": {
-        "command": "prettier --check ."
-      },
-      "lint": {
-        "dependencies": ["lint:md", "lint:prettier"]
-      }
+        "lint:md": {
+            "command": "markdownlint-cli2",
+            "files": [
+                "src/**/*.md"
+            ]
+        },
+        "lint:prettier": {
+            "command": "prettier --check ."
+        },
+        "lint": {
+            "dependencies": [
+                "lint:md",
+                "lint:prettier"
+            ]
+        }
     },
     "workspaces": {
         "packages": [

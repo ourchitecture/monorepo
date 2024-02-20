@@ -1,15 +1,15 @@
 globs:
-  - '**/*.md'
+    - '**/*.md'
 ignores:
-  - '**/.vscode/**'
-  - '**/node_modules/**'
+    - '**/.vscode/**'
+    - '**/node_modules/**'
 config:
-  # Spaces after list markers.
-  MD030:
-    ul_multi: 1
-    ul_single: 1
-  # Unordered list indentation.
-  MD007:
-    indent: 4
-  # Disable line length.
-  MD013: false
+    # Spaces after list markers.
+    MD030:
+        ul_multi: 1
+        ul_single: 1
+    # Unordered list indentation.
+    MD007:
+        indent: 4
+    # Disable line length.
+    MD013: false
