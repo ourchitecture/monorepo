@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+yarn lint
+
+# Add some room for subsequent commit messages.
+echo ''
+echo ''

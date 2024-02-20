@@ -2,6 +2,10 @@
 # Extends ".gitignore" entries.
 ###############################################################################
 
+# Specific directories.
+**/.husky
+**/.wireit
+
 # File patterns.
 **/*.drawio
 **/*.md

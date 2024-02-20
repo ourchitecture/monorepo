@@ -115,4 +115,6 @@ $RECYCLE.BIN/
 !.yarn/sdks
 !.yarn/versions
 
-.wireit/*
+# Specific directories.
+**/.wireit/
+**/node_modules/

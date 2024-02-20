@@ -20,7 +20,8 @@
         "format": "prettier --write .",
         "lint:md": "wireit",
         "lint:prettier": "wireit",
-        "lint": "wireit"
+        "lint": "wireit",
+        "prepare": "husky"
     },
     "version": "1.0.0",
     "wireit": {
@@ -46,6 +47,10 @@
         ]
     },
     "devDependencies": {
+        "@commitlint/cli": "^18.6.1",
+        "@commitlint/config-conventional": "^18.6.2",
+        "husky": "^9.0.11",
+        "lint-staged": "^15.2.2",
         "markdownlint-cli2": "^0.12.1",
         "prettier": "^3.2.5",
         "wireit": "^0.14.4"

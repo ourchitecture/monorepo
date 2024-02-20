@@ -1,7 +1,9 @@
 globs:
     - '**/*.md'
 ignores:
+    - '**/.husky/**'
     - '**/.vscode/**'
+    - '**/.wireit/**'
     - '**/node_modules/**'
 config:
     # Spaces after list markers.
