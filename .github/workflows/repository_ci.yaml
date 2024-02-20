@@ -41,7 +41,7 @@ jobs:
 
             - id: cache-wireit
               name: Setup Wireit cache
-              uses: google/wireit@setup-github-actions-cache/v1
+              uses: google/wireit@setup-github-actions-caching/v1
 
             - id: check-repository
               name: Check repository
