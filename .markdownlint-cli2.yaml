@@ -1,6 +1,7 @@
 globs:
     - '**/*.md'
 ignores:
+    - '**/.changeset/**'
     - '**/.husky/**'
     - '**/.vscode/**'
     - '**/.wireit/**'
