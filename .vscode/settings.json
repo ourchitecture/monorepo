@@ -1,29 +1,29 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "[markdown]": {
-    "diffEditor.ignoreTrimWhitespace": false,
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
-    "editor.quickSuggestions": {
-      "comments": "off",
-      "strings": "off",
-      "other": "off"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "[markdown]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+        "editor.quickSuggestions": {
+            "comments": "off",
+            "strings": "off",
+            "other": "off"
+        },
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.unicodeHighlight.invisibleCharacters": false,
+        "editor.wordWrap": "on"
     },
-    "editor.unicodeHighlight.ambiguousCharacters": false,
-    "editor.unicodeHighlight.invisibleCharacters": false,
-    "editor.wordWrap": "on"
-  },
-  "[ignore][shellscript]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "typescript.tsdk": "./node_modules/typescript/lib",
-  "[properties]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "[dotenv]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-  }
+    "[ignore][shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "[properties]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[dotenv]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    }
 }
