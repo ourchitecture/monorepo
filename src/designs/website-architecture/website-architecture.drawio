@@ -1,0 +1,49 @@
+<mxfile host="65bd71144e">
+    <diagram id="c_1d0xFm4zSnHDSdEgfX" name="Page-1">
+        <mxGraphModel dx="1487" dy="771" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="5" style="edgeStyle=none;html=1;fontSize=16;strokeWidth=3;dashed=1;endArrow=block;endFill=1;startArrow=block;startFill=1;shadow=0;" edge="1" parent="1" source="3" target="2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" style="edgeStyle=none;sketch=0;html=1;shadow=0;dashed=1;strokeWidth=3;fontSize=16;startArrow=block;startFill=1;endArrow=block;endFill=1;" edge="1" parent="1" source="3" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Website Server-Side Rendering (SSR)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="130" y="400" width="190" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Front-end&lt;br style=&quot;font-size: 16px;&quot;&gt;Website" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="130" y="160" width="190" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Back-end For Front-end&amp;nbsp; (BFF) API" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="130" y="640" width="190" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="edgeStyle=none;sketch=0;html=1;shadow=0;dashed=1;strokeWidth=3;fontSize=16;startArrow=block;startFill=1;endArrow=none;endFill=0;" edge="1" parent="1" source="9" target="2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" style="edgeStyle=none;sketch=0;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=0;dashed=1;strokeWidth=3;fontSize=16;startArrow=block;startFill=1;endArrow=block;endFill=1;" edge="1" parent="1" source="9" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.browserWindow;rSize=0;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;mainText=,;recursiveResize=0;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="440" y="302.5" width="380" height="305" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Ourchitecture" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;fontSize=17;fontColor=#666666;align=left;" vertex="1" parent="9">
+                    <mxGeometry x="60" y="12" width="110" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="https://www.ourchitecture.io" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;rSize=0;fontSize=17;fontColor=#666666;align=left;" vertex="1" parent="9">
+                    <mxGeometry x="130" y="60" width="250" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Browser offline data storage" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontSize=16;" vertex="1" parent="9">
+                    <mxGeometry x="60" y="140" width="120" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" style="edgeStyle=none;sketch=0;html=1;shadow=0;dashed=1;strokeWidth=3;fontSize=16;startArrow=block;startFill=1;endArrow=block;endFill=1;" edge="1" parent="1" source="15" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Consumer" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="930" y="395" width="60" height="120" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
