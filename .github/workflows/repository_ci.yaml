@@ -1,0 +1,48 @@
+# Continuous integration (CI) for the main repository.
+name: repository_ci
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - closed
+
+env:
+    CI: true
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    build:
+        name: 'repository_ci'
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - id: upgrade-yarn
+              name: Upgrade yarn
+              run: |
+                  yarn set version $(find ./.yarn/releases/*.cjs -type f)
+
+            - id: install-node
+              uses: actions/setup-node@v2
+              with:
+                  node-version-file: './.node-version'
+                  cache: 'yarn'
+                  cache-dependency-path: '**/yarn.lock'
+
+            - id: cache-wireit
+              name: Setup Wireit cache
+              uses: google/wireit@setup-github-actions-cache/v1
+
+            - id: check
+              name: Check repository
+              run: make check-repository
