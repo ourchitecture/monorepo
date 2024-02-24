@@ -27,20 +27,33 @@
     "packageManager": "yarn@4.1.0",
     "private": true,
     "repository": "https://github.com/ourchitecture/monorepo/",
+    "resolutions": {
+        "@types/react": "^18",
+        "@types/react-dom": "^18"
+    },
     "scripts": {
+        "build:ourstage": "wireit",
         "format": "prettier --write .",
         "lint:md": "wireit",
+        "lint:ourstage": "wireit",
         "lint:prettier": "wireit",
         "lint": "wireit",
+        "test:ourstage": "wireit",
         "prepare": "husky"
     },
     "version": "1.0.0-alpha.0",
     "wireit": {
+        "build:ourstage": {
+            "command": "cd ./src/systems/dev/backstage/ourstage && yarn build"
+        },
         "lint:md": {
             "command": "markdownlint-cli2",
             "files": [
                 "src/**/*.md"
             ]
+        },
+        "lint:ourstage": {
+            "command": "cd ./src/systems/dev/backstage/ourstage && yarn lint"
         },
         "lint:prettier": {
             "command": "prettier --check ."
@@ -50,11 +63,13 @@
                 "lint:md",
                 "lint:prettier"
             ]
+        },
+        "test:ourstage": {
+            "command": "cd ./src/systems/dev/backstage/ourstage && yarn test"
         }
     },
-    "workspaces": {
-        "packages": [
-            "src/**/*"
-        ]
-    }
+    "workspaces": [
+        "src/designs/**/*",
+        "src/systems/leadof/**/*"
+    ]
 }
