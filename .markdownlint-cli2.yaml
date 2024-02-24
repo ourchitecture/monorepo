@@ -6,6 +6,7 @@ ignores:
     - '**/.vscode/**'
     - '**/.wireit/**'
     - '**/node_modules/**'
+    - 'src/systems/dev/backstage/**'
 config:
     # Spaces after list markers.
     MD030:

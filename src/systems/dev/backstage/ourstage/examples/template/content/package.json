@@ -1,0 +1,4 @@
+{
+  "name": "${{ values.name }}",
+  "private": true
+}

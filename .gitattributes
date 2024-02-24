@@ -1,0 +1,20 @@
+# Handle line endings automatically for files detected as text
+# and leave all files detected as binary untouched.
+* text=auto
+
+# Force the following filetypes to have unix line endings, so Windows does not break them
+*.sh eol=lf
+*.md eol=lf
+
+# Force the following filetypes to have windows line endings, so Windows does not break them
+*.bat eol=crlf
+*.cmd eol=crlf
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.min.js binary
+
+# The above will handle all JS and JSON files in the repository if detected as text files
