@@ -106,4 +106,4 @@ endif
 
 .PHONY: pr
 pr:
-	@gh pr create --fill-first --assignee @me --label enhancement
+	@gh pr create --base main --fill-first --assignee @me --label enhancement
