@@ -43,6 +43,6 @@ jobs:
               name: Setup Wireit cache
               uses: google/wireit@setup-github-actions-caching/v1
 
-            - id: check-repository
-              name: Check repository
-              run: make check-repository
+            - id: make
+              name: make
+              run: make
