@@ -56,17 +56,20 @@ else
 	@git commit -asm "chore: $(m)"
 endif
 
-.PHONY: bug
-bug:
+.PHONY: fix
+fix:
 ifndef m
 	$(error message "m" is not set)
 endif
 	@git add .
 ifdef f
-	@git commit -asm "bug($(f)): $(m)"
+	@git commit -asm "fix($(f)): $(m)"
 else
-	@git commit -asm "bug: $(m)"
+	@git commit -asm "fix: $(m)"
 endif
+
+.PHONY: bug
+bug: fix
 
 .PHONY: docs
 docs:
@@ -106,4 +109,30 @@ endif
 
 .PHONY: pr
 pr:
-	@gh pr create --repo ourchitecture/monorepo --base main --fill-first --assignee @me --label enhancement
+	@gh pr create \
+		--repo ourchitecture/monorepo \
+		--base main \
+		--fill-first \
+		--assignee @
+.PHONY: pr-chore
+pr-chore: pr
+
+.PHONY: pr-feat
+pr-feat:
+	@gh pr create \
+		--repo ourchitecture/monorepo \
+		--base main \
+		--fill-first \
+		--assignee @me \
+		--label enhancement
+
+.PHONY: pr-fix
+pr-fix:
+	@gh pr create \
+		--repo ourchitecture/monorepo \
+		--base main \
+		--fill-first \
+		--assignee @me \
+		--label bug
+.PHONY: pr-bug
+pr-bug: pr-fix
