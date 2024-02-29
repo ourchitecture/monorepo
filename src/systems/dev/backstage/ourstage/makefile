@@ -19,7 +19,16 @@ install:
 .PHONY: check
 check:
 	@echo "Checking ourstage..."
-	@yarn prettier:check
 	@yarn workspaces foreach --all --interlaced run lint
 	@yarn workspaces foreach --all --interlaced run test
 	@echo "Successfully checked ourstage."
+
+# Rely on monorepo formatting.
+# While the monorepo treats Backstage as a separate project, tools like
+# `prettier` and related VS Code extensions assume to use the root
+# configuration and ".ignore" files. As a result, project-specific
+# configuration and ".ignore" files are unexpectedly ignored. So, the
+# solution is to rely on the monorepo's formatting entirely.
+.PHONY: format
+format:
+	@cd ../../../../../ && make $@

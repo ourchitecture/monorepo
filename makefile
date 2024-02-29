@@ -29,6 +29,12 @@ check:
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully checked independent projects."
 
+.PHONY: format
+format:
+	@echo "Formatting monorepo..."
+	@yarn workspaces foreach --all --interlaced run format
+	@echo "Successfully formatted monorepo."
+
 ################################################################################
 # Git convience commands
 ################################################################################
