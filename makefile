@@ -35,6 +35,16 @@ format:
 	@yarn workspaces foreach --all --interlaced run format
 	@echo "Successfully formatted monorepo."
 
+.PHONY: audit
+audit:
+	@echo "Auditing monorepo..."
+	@yarn npm audit --all
+	@echo "Successfully audited monorepo."
+
+	@echo "Auditing independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully audited independent projects."
+
 ################################################################################
 # Git convience commands
 ################################################################################

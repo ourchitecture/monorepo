@@ -32,3 +32,9 @@ check:
 .PHONY: format
 format:
 	@cd ../../../../../ && make $@
+
+.PHONY: audit
+audit:
+	@echo "Auditing ourstage..."
+	@yarn npm audit --all
+	@echo "Successfully audited ourstage."
