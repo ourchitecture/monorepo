@@ -19,24 +19,8 @@ install:
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully installed independent projects."
 
-.PHONY: check
-check:
-	@echo "Checking monorepo..."
-	@yarn workspaces foreach --all --interlaced run lint
-	@echo "Successfully checked monorepo."
-
-	@echo "Checking independent projects..."
-	@cd ./src/systems/dev/backstage/ourstage && make $@
-	@echo "Successfully checked independent projects."
-
-.PHONY: format
-format:
-	@echo "Formatting monorepo..."
-	@yarn workspaces foreach --all --interlaced run format
-	@echo "Successfully formatted monorepo."
-
-.PHONY: audit
-audit:
+.PHONY: check-audit
+check-audit:
 	@echo "Auditing monorepo..."
 	@yarn npm audit --all
 	@echo "Successfully audited monorepo."
@@ -44,6 +28,41 @@ audit:
 	@echo "Auditing independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully audited independent projects."
+.PHONY: audit
+audit: check-audit
+
+.PHONY: check-lint
+check-lint:
+	@echo "Linting monorepo..."
+	@yarn workspaces foreach --all --interlaced run lint
+	@echo "Successfully linted monorepo."
+
+	@echo "Linting independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully linted independent projects."
+.PHONY: lint
+lint: check-lint
+
+.PHONY: check-test
+check-test:
+	@echo "Testing monorepo..."
+	@yarn workspaces foreach --all --interlaced run test
+	@echo "Successfully tested monorepo."
+
+	@echo "Testing independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully tested independent projects."
+.PHONY: test
+test: check-test
+
+.PHONY: check
+check: check-audit check-lint check-test
+
+.PHONY: format
+format:
+	@echo "Formatting monorepo..."
+	@yarn workspaces foreach --all --interlaced run format
+	@echo "Successfully formatted monorepo."
 
 ################################################################################
 # Git convience commands

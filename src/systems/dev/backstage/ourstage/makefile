@@ -16,12 +16,32 @@ install:
 	@yarn workspaces foreach --all --interlaced run build
 	@echo "Successfully installed ourstage."
 
-.PHONY: check
-check:
-	@echo "Checking ourstage..."
+.PHONY: check-audit
+check-audit:
+	@echo "Auditing ourstage..."
+	@yarn npm audit --all
+	@echo "Successfully audited ourstage."
+.PHONY: audit
+audit: check-audit
+
+.PHONY: check-lint
+check-lint:
+	@echo "Linting ourstage..."
 	@yarn workspaces foreach --all --interlaced run lint
+	@echo "Successfully linted ourstage."
+.PHONY: lint
+lint: check-lint
+
+.PHONY: check-test
+check-test:
+	@echo "Testing ourstage..."
 	@yarn workspaces foreach --all --interlaced run test
-	@echo "Successfully checked ourstage."
+	@echo "Successfully tested ourstage."
+.PHONY: test
+test: check-test
+
+.PHONY: check
+check: check-audit check-lint check-test
 
 # Rely on monorepo formatting.
 # While the monorepo treats Backstage as a separate project, tools like
@@ -32,9 +52,3 @@ check:
 .PHONY: format
 format:
 	@cd ../../../../../ && make $@
-
-.PHONY: audit
-audit:
-	@echo "Auditing ourstage..."
-	@yarn npm audit --all
-	@echo "Successfully audited ourstage."
