@@ -7,7 +7,7 @@
     "role": "frontend"
   },
   "scripts": {
-    "start": "backstage-cli package start",
+    "start": "APP_CONFIG_backend_baseUrl=http://localhost:7007 backstage-cli package start",
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "test": "backstage-cli package test --watchAll=false",
