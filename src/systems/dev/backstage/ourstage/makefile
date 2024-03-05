@@ -52,3 +52,44 @@ check: check-audit check-lint check-test
 .PHONY: format
 format:
 	@cd ../../../../../ && make $@
+
+.PHONY: install-container
+install-container:
+	@echo "Installing ourstage container..."
+	@docker build ./ --file ./packages/backend/Containerfile --tag localhost/ourstage/backend
+	@echo "Successfully installed ourstage container."
+
+.PHONY: up
+up: install-container
+	@echo "Starting ourstage..."
+	@docker run \
+		--name ourstage-backend \
+		--rm \
+		--detach \
+		--publish 3000:3000 \
+		localhost/ourstage/backend
+	@echo "Successfully started ourstage."
+.PHONY: start
+start: up
+.PHONY: startup
+startup: up
+.PHONY: serve
+serve: up
+.PHONY: run
+run: up
+
+.PHONY: down
+down:
+	@echo "Stopping ourstage..."
+	@docker rm --force ourstage-backend
+	@echo "Stopping stopped ourstage."
+.PHONY: stop
+stop: down
+.PHONY: shutdown
+shutdown: down
+
+.PHONY: upgrade
+upgrade:
+	@echo "Upgrading ourstage..."
+	@yarn upgrade-interactive --latest
+	@echo "Successfully upgraded ourstage."

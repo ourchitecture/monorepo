@@ -64,6 +64,40 @@ format:
 	@yarn workspaces foreach --all --interlaced run format
 	@echo "Successfully formatted monorepo."
 
+.PHONY: up
+up:
+	@echo "Starting the system..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully started the system."
+.PHONY: start
+start: up
+.PHONY: startup
+startup: up
+.PHONY: serve
+serve: up
+.PHONY: run
+run: up
+
+.PHONY: down
+down:
+	@echo "Stopping the system..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Stopping started the system."
+.PHONY: stop
+stop: down
+.PHONY: shutdown
+shutdown: down
+
+.PHONY: upgrade
+upgrade:
+	@echo "Upgrading monorepo..."
+	@yarn upgrade-interactive --latest
+	@echo "Successfully upgraded monorepo."
+
+	@echo "Upgrading independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully upgraded independent projects."
+
 ################################################################################
 # Git convience commands
 ################################################################################

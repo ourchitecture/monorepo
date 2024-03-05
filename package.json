@@ -18,7 +18,7 @@
     "engines": {
         "node": ">=20.11.1 <21.0.0",
         "npm": ">=10.4.0",
-        "yarn": ">=1.22.21"
+        "yarn": ">=1.22.19"
     },
     "homepage": "https://github.com/ourchitecture/monorepo/",
     "license": "MIT OR CC0-1.0",
