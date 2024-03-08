@@ -53,21 +53,31 @@ check: check-audit check-lint check-test
 format:
 	@cd ../../../../../ && make $@
 
+ourstage_backend_image_name := localhost/ourstage/backend
+ourstage_backend_port := 7007
+ourstage_backend_container_port := 7007
+ourstage_backend_env := dev
+ourstage_backend_container_name := ourstage-backend-$(ourstage_backend_env)
+
 .PHONY: install-container
 install-container:
 	@echo "Installing ourstage container..."
-	@docker build ./ --file ./packages/backend/Containerfile --tag localhost/ourstage/backend
+	@docker build \
+		./ \
+		--file ./packages/backend/$(ourstage_backend_env).containerfile \
+		--tag $(ourstage_backend_image_name)
 	@echo "Successfully installed ourstage container."
 
 .PHONY: up
 up: install-container
 	@echo "Starting ourstage..."
 	@docker run \
-		--name ourstage-backend \
-		--rm \
+		--name $(ourstage_backend_container_name) \
 		--detach \
-		--publish 3000:3000 \
-		localhost/ourstage/backend
+		--user node \
+		--network host \
+		$(ourstage_backend_image_name)
+	@echo "" && echo "Ourstage is running at http://localhost:$(ourstage_backend_port)" && echo ""
 	@echo "Successfully started ourstage."
 .PHONY: start
 start: up
@@ -78,10 +88,31 @@ serve: up
 .PHONY: run
 run: up
 
+.PHONY: debug
+debug: install-container
+	@echo "Starting ourstage..."
+	@docker run \
+		--name debug-$(ourstage_backend_container_name) \
+		--rm \
+		--interactive \
+		--tty \
+		--entrypoint /bin/bash \
+		--user node \
+		--network host \
+		$(ourstage_backend_image_name)
+	@echo "" && echo "Ourstage is running at http://localhost:$(ourstage_backend_port)" && echo ""
+	@echo "Successfully started ourstage."
+
+.PHONY: logs
+logs:
+	@echo "Retrieving ourstage logs..."
+	@docker logs $(ourstage_backend_container_name)
+	@echo "Retrieved ourstage logs."
+
 .PHONY: down
 down:
 	@echo "Stopping ourstage..."
-	@docker rm --force ourstage-backend
+	@docker rm --force $(ourstage_backend_container_name)
 	@echo "Stopping stopped ourstage."
 .PHONY: stop
 stop: down
