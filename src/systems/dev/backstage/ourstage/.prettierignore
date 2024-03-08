@@ -1,3 +1,5 @@
+**/.yarn/releases
+
 dist
 dist-types
 coverage

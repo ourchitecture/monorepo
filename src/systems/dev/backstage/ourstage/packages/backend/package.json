@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@ourstage/backend",
   "version": "0.0.0",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
