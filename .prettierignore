@@ -8,9 +8,7 @@
 **/.vscode
 **/.wireit
 **/.yarn/releases
-**/coverage
-**/dist
-**/dist-types
+**/src/systems/dev/backstage/ourstage
 
 # File patterns.
 **/*.drawio

@@ -5,9 +5,7 @@ ignores:
     - '**/.husky/**'
     - '**/.vscode/**'
     - '**/.wireit/**'
-    - '**/coverage/**'
-    - '**/dist/**'
-    - '**/dist-types/**'
+    - '**/src/systems/dev/backstage/ourstage/**'
     - '**/node_modules/**'
 config:
     # Spaces after list markers.
