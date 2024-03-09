@@ -1,8 +1,10 @@
-.git
 .yarn/cache
 .yarn/install-state.gz
-node_modules
-packages/*/src
-packages/*/node_modules
-plugins
-*.local.yaml
+**/coverage
+**/dist
+**/dist-types
+**/node_modules
+
+*.log
+
+app-config.local.yaml

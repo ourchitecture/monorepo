@@ -120,4 +120,7 @@ $RECYCLE.BIN/
 **/node_modules/
 
 # Wildcard files.
+.env*
+*.env
+*.bak
 *.log

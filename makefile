@@ -1,17 +1,17 @@
 .DEFAULT_GOAL:=all
 
-all: init install check
+all: install-dependencies install check
 
-.PHONY: init
-init:
-	@echo "Initializing monorepo..."
+.PHONY: install-dependencies
+install-dependencies:
+	@echo "Installing monorepo dependencies..."
 	@yarn install --immutable
 	@yarn workspaces foreach --all --interlaced run install --immutable
-	@echo "Successfully initialized monorepo."
+	@echo "Successfully installed monorepo dependencies."
 
-	@echo "Initializing independent projects..."
+	@echo "Installing independent project dependencies..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
-	@echo "Successfully initialized independent projects."
+	@echo "Successfully installed independent project dependencies."
 
 .PHONY: install
 install:

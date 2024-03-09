@@ -9,21 +9,60 @@
 #
 # Once the commands have been run, you can build the image using `yarn build-image`
 
-FROM node:18-bookworm-slim
+ARG OS_VERSION=bookworm-slim
+ARG NODE_VERSION=20.11.1
+
+ARG IMAGE_REGISTRY=docker.io/library/
+ARG IMAGE_NAME=node
+ARG IMAGE_SHA=sha256:2440a04b7b2ec79fc73d1f5e06fd90ba4f29ac57c129ba7adc3b3b0836774b3c
+ARG IMAGE_TAG=${NODE_VERSION}-${OS_VERSION}@${IMAGE_SHA}
+ARG BASE_IMAGE=${IMAGE_REGISTRY}${IMAGE_NAME}:${IMAGE_TAG}
+
+ARG NPM_REGISTRY_URL_SUFFIX=//localhost:8081/repository/npm-all/
+ARG NPM_REGISTRY_URL=http:${NPM_REGISTRY_URL_SUFFIX}
+ARG NPM_REGISTRY_TOKEN
+
+FROM ${BASE_IMAGE} as base
 
 # Install isolate-vm dependencies, these are needed by the @backstage/plugin-scaffolder-backend.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install -y --no-install-recommends python3 g++ build-essential && \
-    yarn config set python /usr/bin/python3
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update \
+  && apt-get install \
+  --assume-yes \
+  --no-install-recommends \
+  build-essential \
+  g++ \
+  python3 \
+  && rm -rf /var/lib/apt/lists/* \
+  && yarn config set python /usr/bin/python3
+
+FROM base as dev_base
+
+ARG NPM_REGISTRY_URL_SUFFIX
+ARG NPM_REGISTRY_URL
+ARG NPM_REGISTRY_TOKEN
+
+# TODO: Use Nexus for the apt repository.
+# sudo sed -i '/myrepository\.com/d' /etc/apt/sources.list \
+# && echo "deb http://localhost:8081/repository/apt-public-debian-bookworm/ bookworm main" > /etc/apt/sources.list \
+# http://localhost:8081/repository/apt-public-focal/
 
 # Install sqlite3 dependencies. You can skip this if you don't use sqlite3 in the image,
 # in which case you should also move better-sqlite3 to "devDependencies" in package.json.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install -y --no-install-recommends libsqlite3-dev
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update \
+  && apt-get install \
+  --assume-yes \
+  --no-install-recommends \
+  curl \
+  git \
+  libsqlite3-dev \
+  && rm -rf /var/lib/apt/lists/* \
+  && git config --global init.defaultBranch main
+
+FROM dev_base as build
 
 # From here on we use the least-privileged `node` user to run the backend.
 USER node
@@ -34,19 +73,52 @@ USER node
 WORKDIR /app
 
 # This switches many Node.js dependencies to production mode.
-ENV NODE_ENV production
+ENV NODE_ENV=development
 
-# Copy repo skeleton first, to avoid unnecessary docker cache invalidation.
-# The skeleton contains the package.json of each package in the monorepo,
-# and along with yarn.lock and the root package.json, that's enough to run yarn install.
-COPY --chown=node:node yarn.lock package.json packages/backend/dist/skeleton.tar.gz ./
-RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
+# syntax=docker/dockerfile:experimental
+# RUN --mount=type=secret,id=npm_password \
+#   git init \
+#   ...
+#   && echo "//localhost:8081/repository/npm-all/:_auth=\"$(cat /run/secrets/npm_password)\"" >> .npmrc \
+RUN --mount=type=secret,id=npm_password \
+  git init \
+  && git config user.email "dev.noreply@ourchitecture.io" \
+  && git config user.name "Ourchitecture Automation" \
+  && git commit --allow-empty --message "chore: initial commit" \
+  && mkdir --parents /home/node/.cache/yarn \
+  && touch ./.npmrc \
+  && echo "//localhost:8081/repository/npm-all/:always-auth=true" >> ./.npmrc \
+  && echo "//localhost:8081/repository/npm-all/:_auth=${NPM_REGISTRY_TOKEN}" >> ./.npmrc \
+  && echo "email=dev.noreply@ourchitecture.io" >> ./.npmrc \
+  && echo "init.author.name=Ourchitecture Development" >> ./.npmrc \
+  && echo "init.author.email=dev.noreply@ourchitecture.io" >> ./.npmrc \
+  && echo "init.author.url=https://ourchitecture.io" >> ./.npmrc \
+  && echo "registry=${NPM_REGISTRY_URL}" >> ./.npmrc \
+  && echo "update-notifier=false" >> ./.npmrc \
+  && npm config set registry ${NPM_REGISTRY_URL} \
+  && yarn config set registry ${NPM_REGISTRY_URL}
 
+# Install system dependencies with core files to
+# avoid unnecessary docker cache invalidation.
+# Backup specific files for later.
+COPY --chown=node:node .yarnrc package.json makefile ./
+COPY --chown=node:node .yarn/releases/ .yarn/releases/
+COPY --chown=node:node packages/app/package.json ./packages/app/
+COPY --chown=node:node packages/backend/package.json ./packages/backend/
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
-    yarn install --frozen-lockfile --production --network-timeout 300000
+  yarn install --timeout 300000 \
+  && cp ./.npmrc ./.npmrc.bak \
+  && cp ./yarn.lock ./yarn.lock.bak
 
-# Then copy the rest of the backend bundle, along with any other files we might want.
-COPY --chown=node:node packages/backend/dist/bundle.tar.gz app-config*.yaml ./
-RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
+# Copy the source code.
+# Restore the backup files.
+# Install and check the system.
+COPY --chown=node:node . ./
+RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
+  rm --force ./.npmrc ./yarn.lock \
+  && cp .npmrc.bak ./.npmrc \
+  && cp yarn.lock.bak ./yarn.lock \
+  && make install check
 
-CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
+# Start the development server.
+CMD ["yarn dev"]

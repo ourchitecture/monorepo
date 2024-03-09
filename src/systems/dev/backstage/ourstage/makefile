@@ -1,12 +1,20 @@
+ourstage_backend_image_name := localhost/ourstage/backend:latest
+ourstage_backend_port := 7007
+ourstage_backend_container_port := 7007
+ourstage_backend_env := dev
+ourstage_backend_container_name := ourstage-backend-$(ourstage_backend_env)
+
 .DEFAULT_GOAL:=all
 
-all: init install check
+all: install-dependencies install check
 
-.PHONY: init
-init:
-	@echo "Initializing ourstage..."
-	@yarn install --immutable
-	@echo "Successfully initialized ourstage."
+.PHONY: install-dependencies
+install-dependencies:
+	@echo "Installing ourstage dependencies..."
+	@yarn install \
+		--frozen-lockfile \
+		--network-timeout 300000
+	@echo "Successfully installed ourstage dependencies."
 
 .PHONY: install
 install:
@@ -49,29 +57,25 @@ format:
 	@yarn run fix
 	@echo "Successfully formatted ourstage."
 
-ourstage_backend_image_name := localhost/ourstage/backend
-ourstage_backend_port := 7007
-ourstage_backend_container_port := 7007
-ourstage_backend_env := dev
-ourstage_backend_container_name := ourstage-backend-$(ourstage_backend_env)
-
 .PHONY: install-container
 install-container:
 	@echo "Installing ourstage container..."
 	@docker build \
-		./ \
-		--file ./packages/backend/$(ourstage_backend_env).containerfile \
-		--tag $(ourstage_backend_image_name)
+		--build-arg="NPM_REGISTRY_TOKEN=$$(cat .nexus-npm-password)" \
+		--file=./packages/backend/$(ourstage_backend_env).containerfile \
+		--network=host \
+		--tag=$(ourstage_backend_image_name) \
+		./
 	@echo "Successfully installed ourstage container."
 
 .PHONY: up
 up: install-container
 	@echo "Starting ourstage..."
 	@docker run \
-		--name $(ourstage_backend_container_name) \
 		--detach \
-		--user node \
+		--name $(ourstage_backend_container_name) \
 		--network host \
+		--user node \
 		$(ourstage_backend_image_name)
 	@echo "" && echo "Ourstage is running at http://localhost:$(ourstage_backend_port)" && echo ""
 	@echo "Successfully started ourstage."
@@ -86,18 +90,17 @@ run: up
 
 .PHONY: debug
 debug: install-container
-	@echo "Starting ourstage..."
+	@echo "Debugging ourstage..."
 	@docker run \
-		--name debug-$(ourstage_backend_container_name) \
-		--rm \
-		--interactive \
-		--tty \
 		--entrypoint /bin/bash \
-		--user node \
+		--interactive \
+		--name debug-$(ourstage_backend_container_name) \
 		--network host \
+		--rm \
+		--tty \
+		--user node \
 		$(ourstage_backend_image_name)
-	@echo "" && echo "Ourstage is running at http://localhost:$(ourstage_backend_port)" && echo ""
-	@echo "Successfully started ourstage."
+	@echo "Successfully debugged ourstage."
 
 .PHONY: logs
 logs:

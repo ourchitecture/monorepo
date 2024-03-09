@@ -4,3 +4,5 @@ dist
 dist-types
 coverage
 .vscode
+
+.nexus-npm-password
