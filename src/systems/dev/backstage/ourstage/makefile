@@ -15,6 +15,8 @@ install-dependencies:
 		--frozen-lockfile \
 		--network-timeout 300000
 	@echo "Successfully installed ourstage dependencies."
+.PHONY: init
+init: install-dependencies
 
 .PHONY: install
 install:
@@ -67,6 +69,12 @@ install-container:
 		--tag=$(ourstage_backend_image_name) \
 		./
 	@echo "Successfully installed ourstage container."
+
+.PHONY: local-dev
+local-dev:
+	@echo "Starting ourstage locally..."
+	@yarn dev
+	@echo "Successfully started ourstage locally."
 
 .PHONY: up
 up: install-container
@@ -123,3 +131,20 @@ upgrade:
 	@echo "Upgrading ourstage..."
 	@yarn upgrade-interactive --latest
 	@echo "Successfully upgraded ourstage."
+
+.PHONY: clean
+clean:
+	@echo "Cleaning ourstage..."
+	@if [ -d "./node_modules" ]; then yarn run clean || true; fi
+	@echo "Successfully cleaned ourstage."
+
+.PHONY: reset
+reset: clean
+	@echo "Resetting ourstage..."
+	@rm --recursive --force \
+		./.yarn/cache \
+		./.yarn/install-state.gz \
+		./node_modules \
+		./packages/app/node_modules \
+		./packages/backend/node_modules
+	@echo "Successfully reset ourstage."

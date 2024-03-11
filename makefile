@@ -12,6 +12,8 @@ install-dependencies:
 	@echo "Installing independent project dependencies..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully installed independent project dependencies."
+.PHONY: init
+init: install-dependencies
 
 .PHONY: install
 install:

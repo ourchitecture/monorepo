@@ -24,7 +24,7 @@
     "license": "MIT OR CC0-1.0",
     "main": "",
     "name": "@ourchitecture/monorepo",
-    "packageManager": "yarn@4.1.0",
+    "packageManager": "yarn@4.1.1",
     "private": true,
     "repository": "https://github.com/ourchitecture/monorepo/",
     "resolutions": {
