@@ -12,7 +12,7 @@ all: install-dependencies install check
 install-dependencies:
 	@echo "Installing ourstage dependencies..."
 	@yarn install \
-		--frozen-lockfile \
+		--immutable \
 		--network-timeout 300000
 	@echo "Successfully installed ourstage dependencies."
 .PHONY: init
@@ -25,13 +25,15 @@ install:
 	@yarn run build:all
 	@echo "Successfully installed ourstage."
 
-.PHONY: check-audit
-check-audit:
-	@echo "Auditing ourstage..."
-	@yarn audit --all
-	@echo "Successfully audited ourstage."
-.PHONY: audit
-audit: check-audit
+# BUG: No solution found.
+# See similar issue: https://github.com/yarnpkg/berry/issues/4117
+# .PHONY: check-audit
+# check-audit:
+# 	@echo "Auditing ourstage..."
+# 	@yarn audit --all
+# 	@echo "Successfully audited ourstage."
+# .PHONY: audit
+# audit: check-audit
 
 .PHONY: check-lint
 check-lint:

@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "18 || 20"
+    "node": ">=20.11.1 <21.0.0",
+    "npm": ">=10.4.0",
+    "yarn": ">=1.22.19"
   },
   "scripts": {
     "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
-    "start": "yarn workspace app start",
-    "start-backend": "yarn workspace backend start",
-    "build:backend": "yarn workspace backend build",
+    "start": "yarn workspace @ourstage/app start",
+    "start-backend": "yarn workspace @ourstage/backend start",
+    "build:backend": "yarn workspace @ourstage/backend build",
     "build:all": "backstage-cli repo build --all",
-    "build-image": "yarn workspace backend build-image",
+    "build-image": "yarn workspace @ourstage/backend build-image",
     "tsc": "tsc",
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "backstage-cli repo clean",
@@ -55,5 +57,5 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@3.8.1"
+  "packageManager": "yarn@4.1.1"
 }

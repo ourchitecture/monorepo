@@ -21,17 +21,19 @@ install:
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully installed independent projects."
 
-.PHONY: check-audit
-check-audit:
-	@echo "Auditing monorepo..."
-	@yarn npm audit --all
-	@echo "Successfully audited monorepo."
+# BUG: No solution found.
+# See similar issue: https://github.com/yarnpkg/berry/issues/4117
+# .PHONY: check-audit
+# check-audit:
+# 	@echo "Auditing monorepo..."
+# 	@yarn npm audit --all
+# 	@echo "Successfully audited monorepo."
 
-	@echo "Auditing independent projects..."
-	@cd ./src/systems/dev/backstage/ourstage && make $@
-	@echo "Successfully audited independent projects."
-.PHONY: audit
-audit: check-audit
+# 	@echo "Auditing independent projects..."
+# 	@cd ./src/systems/dev/backstage/ourstage && make $@
+# 	@echo "Successfully audited independent projects."
+# .PHONY: audit
+# audit: check-audit
 
 .PHONY: check-lint
 check-lint:
@@ -58,7 +60,7 @@ check-test:
 test: check-test
 
 .PHONY: check
-check: check-audit check-lint check-test
+check: check-lint check-test
 
 .PHONY: format
 format:
@@ -99,6 +101,29 @@ upgrade:
 	@echo "Upgrading independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully upgraded independent projects."
+
+.PHONY: clean
+clean:
+	@echo "Cleaning monorepo..."
+	@echo "Successfully cleaned monorepo."
+
+	@echo "Cleaning independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully cleaned independent projects."
+
+.PHONY: reset
+reset: clean
+	@echo "Resetting monorepo..."
+	@rm --recursive --force \
+		./.wireit/ \
+		./.yarn/cache \
+		./.yarn/install-state.gz \
+		./node_modules
+	@echo "Successfully reset monorepo."
+
+	@echo "Resetting independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully reset independent projects."
 
 ################################################################################
 # Git convience commands

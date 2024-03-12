@@ -27,10 +27,6 @@
     "packageManager": "yarn@4.1.1",
     "private": true,
     "repository": "https://github.com/ourchitecture/monorepo/",
-    "resolutions": {
-        "@types/react": "^18",
-        "@types/react-dom": "^18"
-    },
     "scripts": {
         "build:ourstage": "wireit",
         "format": "prettier --write .",
