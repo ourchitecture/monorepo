@@ -74,30 +74,14 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, Group, User, System, API, Resource, Location]
+  # NOTE: file locations are relative to the backend process,
+  # typically `packages/backend`.
   locations:
-    # Local example data, file locations are relative to the backend process, typically `packages/backend`
+    # Ourchitecture entities catalog.
     - type: file
-      target: ../../examples/entities.yaml
+      target: ../../../catalog/catalog-info.yaml
 
-    # Local example template
+    # Ourstage entities catalog.
     - type: file
-      target: ../../examples/template/template.yaml
-      rules:
-        - allow: [Template]
-
-    # Local example organizational data
-    - type: file
-      target: ../../examples/org.yaml
-      rules:
-        - allow: [User, Group]
-
-    ## Uncomment these lines to add more example data
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
-
-    ## Uncomment these lines to add an example org
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
-    #   rules:
-    #     - allow: [User, Group]
+      target: ../../catalog-info.yaml

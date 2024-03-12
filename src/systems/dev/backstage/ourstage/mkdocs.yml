@@ -1,0 +1,9 @@
+docs_dir: ./techdocs/
+site_name: 'Ourstage'
+repo_url: https://github.com/ourstageio/monorepo/
+
+nav:
+    - Home: README.md
+
+plugins:
+    - techdocs-core

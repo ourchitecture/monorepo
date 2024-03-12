@@ -1,0 +1,13 @@
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-location
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+    name: ourchitecture-catalog
+    description: The Ourchitecture entities catalog
+    annotations:
+        github.com/project-slug: ourchitecture/monorepo
+        backstage.io/source-location: url:https://github.com/ourchitecture/monorepo/
+spec:
+    targets:
+        - ./groups/catalog-info.yaml
+        - ./users/catalog-info.yaml
