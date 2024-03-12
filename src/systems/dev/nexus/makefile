@@ -68,12 +68,20 @@ else
 endif
 	@echo "Retrieved ourstage logs."
 
-.PHONY: down
-down:
+.PHONY: clean
+clean:
 	@echo "Stopping ourstage..."
 	@docker rm --force $(nexus_container_name)
 	@echo "Stopping stopped ourstage."
+.PHONY: down
+down: clean
 .PHONY: stop
-stop: down
+stop: clean
 .PHONY: shutdown
-shutdown: down
+shutdown: clean
+
+.PHONY: reset
+reset: clean
+	@echo "Resetting ourstage..."
+	@docker volume rm --force $(nexus_data_volume_name)
+	@echo "Successfully reset ourstage."
