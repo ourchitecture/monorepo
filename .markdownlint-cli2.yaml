@@ -5,8 +5,8 @@ ignores:
     - '**/.husky/**'
     - '**/.vscode/**'
     - '**/.wireit/**'
+    - '**/src/systems/dev/backstage/ourstage/**'
     - '**/node_modules/**'
-    - 'src/systems/dev/backstage/**'
 config:
     # Spaces after list markers.
     MD030:

@@ -1,17 +1,19 @@
 .DEFAULT_GOAL:=all
 
-all: init install check
+all: install-dependencies install check
 
-.PHONY: init
-init:
-	@echo "Initializing monorepo..."
+.PHONY: install-dependencies
+install-dependencies:
+	@echo "Installing monorepo dependencies..."
 	@yarn install --immutable
 	@yarn workspaces foreach --all --interlaced run install --immutable
-	@echo "Successfully initialized monorepo."
+	@echo "Successfully installed monorepo dependencies."
 
-	@echo "Initializing independent projects..."
+	@echo "Installing independent project dependencies..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
-	@echo "Successfully initialized independent projects."
+	@echo "Successfully installed independent project dependencies."
+.PHONY: init
+init: install-dependencies
 
 .PHONY: install
 install:
@@ -19,15 +21,109 @@ install:
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully installed independent projects."
 
-.PHONY: check
-check:
-	@echo "Checking monorepo..."
-	@yarn workspaces foreach --all --interlaced run lint
-	@echo "Successfully checked monorepo."
+# BUG: No solution found.
+# See similar issue: https://github.com/yarnpkg/berry/issues/4117
+# .PHONY: check-audit
+# check-audit:
+# 	@echo "Auditing monorepo..."
+# 	@yarn npm audit --all
+# 	@echo "Successfully audited monorepo."
 
-	@echo "Checking independent projects..."
+# 	@echo "Auditing independent projects..."
+# 	@cd ./src/systems/dev/backstage/ourstage && make $@
+# 	@echo "Successfully audited independent projects."
+# .PHONY: audit
+# audit: check-audit
+
+.PHONY: check-lint
+check-lint:
+	@echo "Linting monorepo..."
+	@yarn workspaces foreach --all --interlaced run lint
+	@echo "Successfully linted monorepo."
+
+	@echo "Linting independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
-	@echo "Successfully checked independent projects."
+	@echo "Successfully linted independent projects."
+.PHONY: lint
+lint: check-lint
+
+.PHONY: check-test
+check-test:
+	@echo "Testing monorepo..."
+	@yarn workspaces foreach --all --interlaced run test
+	@echo "Successfully tested monorepo."
+
+	@echo "Testing independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully tested independent projects."
+.PHONY: test
+test: check-test
+
+.PHONY: check
+check: check-lint check-test
+
+.PHONY: format
+format:
+	@echo "Formatting monorepo..."
+	@yarn workspaces foreach --all --interlaced run format
+	@echo "Successfully formatted monorepo."
+
+.PHONY: up
+up:
+	@echo "Starting the system..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully started the system."
+.PHONY: start
+start: up
+.PHONY: startup
+startup: up
+.PHONY: serve
+serve: up
+.PHONY: run
+run: up
+
+.PHONY: down
+down:
+	@echo "Stopping the system..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Stopping started the system."
+.PHONY: stop
+stop: down
+.PHONY: shutdown
+shutdown: down
+
+.PHONY: upgrade
+upgrade:
+	@echo "Upgrading monorepo..."
+	@yarn upgrade-interactive --latest
+	@echo "Successfully upgraded monorepo."
+
+	@echo "Upgrading independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully upgraded independent projects."
+
+.PHONY: clean
+clean:
+	@echo "Cleaning monorepo..."
+	@echo "Successfully cleaned monorepo."
+
+	@echo "Cleaning independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully cleaned independent projects."
+
+.PHONY: reset
+reset: clean
+	@echo "Resetting monorepo..."
+	@rm --recursive --force \
+		./.wireit/ \
+		./.yarn/cache \
+		./.yarn/install-state.gz \
+		./node_modules
+	@echo "Successfully reset monorepo."
+
+	@echo "Resetting independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully reset independent projects."
 
 ################################################################################
 # Git convience commands

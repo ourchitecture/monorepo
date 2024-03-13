@@ -18,19 +18,15 @@
     "engines": {
         "node": ">=20.11.1 <21.0.0",
         "npm": ">=10.4.0",
-        "yarn": ">=1.22.21"
+        "yarn": ">=1.22.19"
     },
     "homepage": "https://github.com/ourchitecture/monorepo/",
     "license": "MIT OR CC0-1.0",
     "main": "",
     "name": "@ourchitecture/monorepo",
-    "packageManager": "yarn@4.1.0",
+    "packageManager": "yarn@4.1.1",
     "private": true,
     "repository": "https://github.com/ourchitecture/monorepo/",
-    "resolutions": {
-        "@types/react": "^18",
-        "@types/react-dom": "^18"
-    },
     "scripts": {
         "build:ourstage": "wireit",
         "format": "prettier --write .",

@@ -5,11 +5,14 @@
 # Specific directories.
 **/.changeset
 **/.husky
+**/.vscode
 **/.wireit
 **/.yarn/releases
+**/src/systems/dev/backstage/ourstage
 
 # File patterns.
 **/*.drawio
+**/*.log
 **/*.md
 **/*.png
 **/*.svg
@@ -18,5 +21,3 @@
 **/.yarnrc.yaml
 **/LICENSE
 **/yarn.lock
-
-src/systems/dev/backstage/

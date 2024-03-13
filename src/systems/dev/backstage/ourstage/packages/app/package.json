@@ -10,7 +10,7 @@
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
-    "test": "backstage-cli package test --watchAll=false",
+    "test": "backstage-cli package test",
     "lint": "backstage-cli package lint"
   },
   "dependencies": {
@@ -55,7 +55,7 @@
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.0.0",
-    "@types/react": "^18.2.57",
+    "@types/react": "*",
     "@types/react-dom": "*",
     "cross-env": "^7.0.0"
   },

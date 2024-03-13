@@ -1,0 +1,18 @@
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-group
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+    description: The Ourchitecture team
+    name: ourchitecture
+    links:
+        - title: Ourchitecture.io
+          url: http://ourchitecture.io
+        - icon: github
+          title: Ourchitecture @GitHub
+          url: http://github.com/ourchitectureio
+spec:
+    children: []
+    profile:
+        displayName: Ourchitecture Team
+        picture: https://avatars.githubusercontent.com/u/97544811?v=4
+    type: team

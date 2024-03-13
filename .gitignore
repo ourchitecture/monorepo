@@ -118,3 +118,9 @@ $RECYCLE.BIN/
 # Specific directories.
 **/.wireit/
 **/node_modules/
+
+# Wildcard files.
+.env*
+*.env
+*.bak
+*.log

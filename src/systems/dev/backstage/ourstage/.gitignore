@@ -15,7 +15,7 @@ coverage
 # Dependencies
 node_modules/
 
-# Yarn
+# Yarn 3 files
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -52,3 +52,5 @@ site
 
 # E2E test reports
 e2e-test-report/
+
+.nexus-npm-password
