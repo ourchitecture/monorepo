@@ -98,8 +98,8 @@ COPY --chown=node:node .yarn/releases/ .yarn/releases/
 COPY --chown=node:node packages/app/package.json ./packages/app/
 COPY --chown=node:node packages/backend/package.json ./packages/backend/
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
-  printf "\nnpmRegistries:\n    \"${NPM_REGISTRY_URL}\":\n        npmAlwaysAuth: true\n        npmAuthIdent: ${NPM_REGISTRY_TOKEN}\n" >> ./.yarnrc.yml \
-  && yarn install \
+  printf "\nenableStrictSsl: false\nnpmAlwaysAuth: true\nnpmRegistryServer: ${NPM_REGISTRY_URL}\nunsafeHttpWhitelist: [127.0.0.1]\nnpmRegistries:\n    \"${NPM_REGISTRY_URL}\":\n        npmAlwaysAuth: true\n        npmAuthIdent: ${NPM_REGISTRY_TOKEN}\n" >> ./.yarnrc.yml \
+  && yarn install --silent \
   && cp ./yarn.lock ./yarn.lock.bak
 
 # Copy the source code.
