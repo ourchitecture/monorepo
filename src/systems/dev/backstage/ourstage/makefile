@@ -11,9 +11,8 @@ all: install-dependencies install check
 .PHONY: install-dependencies
 install-dependencies:
 	@echo "Installing ourstage dependencies..."
-	@yarn install \
-		--immutable \
-		--network-timeout 300000
+	@npm_config_loglevel=error yarn install --immutable
+	@yarn workspaces foreach --all --interlaced run install --immutable
 	@echo "Successfully installed ourstage dependencies."
 .PHONY: init
 init: install-dependencies

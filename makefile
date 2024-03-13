@@ -5,7 +5,7 @@ all: install-dependencies install check
 .PHONY: install-dependencies
 install-dependencies:
 	@echo "Installing monorepo dependencies..."
-	@yarn install --immutable
+	@npm_config_loglevel=error yarn install --immutable
 	@yarn workspaces foreach --all --interlaced run install --immutable
 	@echo "Successfully installed monorepo dependencies."
 
