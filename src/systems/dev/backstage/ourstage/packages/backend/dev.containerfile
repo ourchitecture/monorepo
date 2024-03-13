@@ -18,7 +18,7 @@ ARG IMAGE_SHA=sha256:2440a04b7b2ec79fc73d1f5e06fd90ba4f29ac57c129ba7adc3b3b08367
 ARG IMAGE_TAG=${NODE_VERSION}-${OS_VERSION}@${IMAGE_SHA}
 ARG BASE_IMAGE=${IMAGE_REGISTRY}${IMAGE_NAME}:${IMAGE_TAG}
 
-ARG NPM_REGISTRY_URL_SUFFIX=//localhost:8081/repository/npm-all/
+ARG NPM_REGISTRY_URL_SUFFIX=//127.0.0.1:8081/repository/npm-all/
 ARG NPM_REGISTRY_URL=http:${NPM_REGISTRY_URL_SUFFIX}
 ARG NPM_REGISTRY_TOKEN
 
@@ -33,6 +33,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --no-install-recommends \
   build-essential \
   g++ \
+  iputils-ping \
   python3 \
   && rm -rf /var/lib/apt/lists/* \
   && yarn config set python /usr/bin/python3
@@ -62,7 +63,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   && rm -rf /var/lib/apt/lists/* \
   && git config --global init.defaultBranch main
 
-FROM dev_base as build
+FROM dev_base as dev_build
 
 # From here on we use the least-privileged `node` user to run the backend.
 USER node
@@ -72,7 +73,6 @@ USER node
 # If this occurs, then ensure BuildKit is enabled (`DOCKER_BUILDKIT=1`) so the app dir is correctly created as `node`.
 WORKDIR /app
 
-# This switches many Node.js dependencies to production mode.
 ENV NODE_ENV=development
 
 # syntax=docker/dockerfile:experimental
@@ -86,28 +86,20 @@ RUN --mount=type=secret,id=npm_password \
   && git config user.name "Ourchitecture Automation" \
   && git commit --allow-empty --message "chore: initial commit" \
   && mkdir --parents /home/node/.cache/yarn \
-  && touch ./.npmrc \
-  && echo "//localhost:8081/repository/npm-all/:always-auth=true" >> ./.npmrc \
-  && echo "//localhost:8081/repository/npm-all/:_auth=${NPM_REGISTRY_TOKEN}" >> ./.npmrc \
-  && echo "email=dev.noreply@ourchitecture.io" >> ./.npmrc \
-  && echo "init.author.name=Ourchitecture Development" >> ./.npmrc \
-  && echo "init.author.email=dev.noreply@ourchitecture.io" >> ./.npmrc \
-  && echo "init.author.url=https://ourchitecture.io" >> ./.npmrc \
-  && echo "registry=${NPM_REGISTRY_URL}" >> ./.npmrc \
-  && echo "update-notifier=false" >> ./.npmrc \
   && npm config set registry ${NPM_REGISTRY_URL} \
   && yarn config set registry ${NPM_REGISTRY_URL}
 
 # Install system dependencies with core files to
 # avoid unnecessary docker cache invalidation.
+# Append npm registry credentials to the yarn configuration.
 # Backup specific files for later.
-COPY --chown=node:node .yarnrc package.json makefile ./
+COPY --chown=node:node .yarnrc.yml package.json makefile ./
 COPY --chown=node:node .yarn/releases/ .yarn/releases/
 COPY --chown=node:node packages/app/package.json ./packages/app/
 COPY --chown=node:node packages/backend/package.json ./packages/backend/
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
-  yarn install --timeout 300000 \
-  && cp ./.npmrc ./.npmrc.bak \
+  printf "\nnpmRegistries:\n    \"${NPM_REGISTRY_URL}\":\n        npmAlwaysAuth: true\n        npmAuthIdent: ${NPM_REGISTRY_TOKEN}\n" >> ./.yarnrc.yml \
+  && yarn install \
   && cp ./yarn.lock ./yarn.lock.bak
 
 # Copy the source code.
@@ -116,9 +108,16 @@ RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid
 COPY --chown=node:node . ./
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
   rm --force ./.npmrc ./yarn.lock \
-  && cp .npmrc.bak ./.npmrc \
   && cp yarn.lock.bak ./yarn.lock \
   && make install check
+
+FROM dev_build as dev_release
+
+USER node
+
+WORKDIR /app
+
+ENV NODE_ENV=development
 
 # Start the development server.
 CMD ["yarn dev"]

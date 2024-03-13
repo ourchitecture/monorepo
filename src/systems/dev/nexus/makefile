@@ -18,9 +18,10 @@ install-storage:
 install:
 	@echo "Installing nexus container..."
 	@docker build \
-		./ \
 		--file ./containerfile \
-		--tag $(nexus_image_name)
+		--network=host \
+		--tag $(nexus_image_name) \
+		./
 	@echo "Successfully installed nexus container."
 
 .PHONY: up
@@ -32,7 +33,7 @@ up: install
 		--detach \
 		--volume $(nexus_data_volume_name):/nexus-data \
 		$(nexus_image_name)
-	@echo "" && echo "Our Nexus is running at http://localhost:$(nexus_port)" && echo ""
+	@printf "\n\nOur Nexus is running at http://localhost:$(nexus_port)\n\n"
 	@echo "Successfully started nexus container."
 
 .PHONY: start
@@ -45,7 +46,7 @@ serve: up
 run: up
 
 .PHONY: debug
-debug: install-container
+debug: install
 	@echo "Starting ourstage..."
 	@docker run \
 		--name debug-$(nexus_container_name) \

@@ -59,6 +59,7 @@ check: check-lint check-test
 format:
 	@echo "Formatting ourstage..."
 	@yarn run fix
+	@yarn run format
 	@echo "Successfully formatted ourstage."
 
 .PHONY: install-container
@@ -87,7 +88,7 @@ up: install-container
 		--network host \
 		--user node \
 		$(ourstage_backend_image_name)
-	@echo "" && echo "Ourstage is running at http://localhost:$(ourstage_backend_port)" && echo ""
+	@printf "\n\nOurstage is running at http://localhost:$(ourstage_backend_port)\n\n"
 	@echo "Successfully started ourstage."
 .PHONY: start
 start: up
