@@ -68,6 +68,10 @@ format:
 	@yarn workspaces foreach --all --interlaced run format
 	@echo "Successfully formatted monorepo."
 
+	@echo "Formatting independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully formatted independent projects."
+
 .PHONY: up
 up:
 	@echo "Starting the system..."
