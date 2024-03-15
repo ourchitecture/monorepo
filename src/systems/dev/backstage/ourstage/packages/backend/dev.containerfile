@@ -120,4 +120,4 @@ WORKDIR /app
 ENV NODE_ENV=development
 
 # Start the development server.
-CMD ["yarn dev"]
+CMD ["yarn", "dev"]

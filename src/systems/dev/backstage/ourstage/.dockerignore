@@ -5,6 +5,8 @@
 **/dist-types
 **/node_modules
 
+*.containerfile
 *.log
 
 app-config.local.yaml
+Containerfile
