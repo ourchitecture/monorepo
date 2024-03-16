@@ -1,7 +1,7 @@
-ourstage_backend_image_name := localhost/ourstage/backend:latest
 ourstage_backend_port := 7007
 ourstage_backend_container_port := 7007
 ourstage_backend_env := dev
+ourstage_backend_image_name := localhost/ourstage/backend-$(ourstage_backend_env):latest
 ourstage_backend_container_name := ourstage-backend-$(ourstage_backend_env)
 
 .DEFAULT_GOAL:=all
@@ -63,14 +63,14 @@ format:
 
 .PHONY: install-container
 install-container:
-	@echo "Installing ourstage container..."
+	@echo "Installing ourstage container ($(ourstage_backend_env))..."
 	@docker build \
 		--build-arg="NPM_REGISTRY_TOKEN=$$(cat .nexus-npm-password)" \
 		--file=./packages/backend/$(ourstage_backend_env).containerfile \
 		--network=host \
 		--tag=$(ourstage_backend_image_name) \
 		./
-	@echo "Successfully installed ourstage container."
+	@echo "Successfully installed ourstage container ($(ourstage_backend_env))."
 
 .PHONY: local-dev
 local-dev:
@@ -80,7 +80,7 @@ local-dev:
 
 .PHONY: up
 up: install-container
-	@echo "Starting ourstage..."
+	@echo "Starting ourstage ($(ourstage_backend_env))..."
 	@docker run \
 		--detach \
 		--name $(ourstage_backend_container_name) \
@@ -88,7 +88,7 @@ up: install-container
 		--user node \
 		$(ourstage_backend_image_name)
 	@printf "\n\nOurstage is running at http://localhost:$(ourstage_backend_port)\n\n"
-	@echo "Successfully started ourstage."
+	@echo "Successfully started ourstage ($(ourstage_backend_env))."
 .PHONY: start
 start: up
 .PHONY: startup
@@ -100,7 +100,7 @@ run: up
 
 .PHONY: debug
 debug: install-container
-	@echo "Debugging ourstage..."
+	@echo "Debugging ourstage ($(ourstage_backend_env))..."
 	@docker run \
 		--entrypoint /bin/bash \
 		--interactive \
@@ -110,19 +110,19 @@ debug: install-container
 		--tty \
 		--user node \
 		$(ourstage_backend_image_name)
-	@echo "Successfully debugged ourstage."
+	@echo "Successfully debugged ourstage ($(ourstage_backend_env))."
 
 .PHONY: logs
 logs:
-	@echo "Retrieving ourstage logs..."
+	@echo "Retrieving ourstage ($(ourstage_backend_env)) logs..."
 	@docker logs $(ourstage_backend_container_name)
-	@echo "Retrieved ourstage logs."
+	@echo "Retrieved ourstage ($(ourstage_backend_env)) logs."
 
 .PHONY: down
 down:
-	@echo "Stopping ourstage..."
+	@echo "Stopping ourstage ($(ourstage_backend_env))..."
 	@docker rm --force $(ourstage_backend_container_name)
-	@echo "Stopping stopped ourstage."
+	@echo "Stopping stopped ourstage ($(ourstage_backend_env))."
 .PHONY: stop
 stop: down
 .PHONY: shutdown

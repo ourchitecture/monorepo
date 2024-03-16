@@ -107,7 +107,7 @@ RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid
 # Install and check the system.
 COPY --chown=node:node . ./
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
-  rm --force ./.npmrc ./yarn.lock \
+  rm --force ./yarn.lock \
   && cp yarn.lock.bak ./yarn.lock \
   && make install check
 

@@ -1,12 +1,12 @@
-.yarn/cache
-.yarn/install-state.gz
+**/.yarn/cache
+**/.yarn/install-state.gz
 **/coverage
 **/dist
 **/dist-types
 **/node_modules
 
-*.containerfile
+packages/backend/*.containerfile
+
 *.log
 
 app-config.local.yaml
-Containerfile
