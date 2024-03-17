@@ -68,6 +68,10 @@ format:
 	@yarn workspaces foreach --all --interlaced run format
 	@echo "Successfully formatted monorepo."
 
+	@echo "Formatting independent projects..."
+	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@echo "Successfully formatted independent projects."
+
 .PHONY: up
 up:
 	@echo "Starting the system..."
@@ -95,7 +99,7 @@ shutdown: down
 .PHONY: upgrade
 upgrade:
 	@echo "Upgrading monorepo..."
-	@yarn upgrade-interactive --latest
+	@yarn upgrade-interactive
 	@echo "Successfully upgraded monorepo."
 
 	@echo "Upgrading independent projects..."
@@ -209,7 +213,7 @@ pr:
 		--repo ourchitecture/monorepo \
 		--base main \
 		--fill-first \
-		--assignee @
+		--assignee @me
 .PHONY: pr-chore
 pr-chore: pr
 

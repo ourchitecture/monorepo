@@ -18,8 +18,16 @@ backend:
     # Uncomment the following host directive to bind to specific interfaces
     # host: 127.0.0.1
   csp:
-    connect-src: ["'self'", 'http:', 'https:']
+    connect-src:
+      - "'self'"
+      - 'http:'
+      - 'https:'
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    img-src:
+      - "'self'"
+      - 'data:'
+      - 'https://avatars.githubusercontent.com'
+      - 'https://media.licdn.com'
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
     origin: http://localhost:3000
@@ -75,13 +83,13 @@ catalog:
     pullRequestBranchName: backstage-integration
   rules:
     - allow: [Component, Group, User, System, API, Resource, Location]
-  # NOTE: file locations are relative to the backend process,
-  # typically `packages/backend`.
   locations:
     # Ourchitecture entities catalog.
     - type: url
       target: https://github.com/ourchitecture/monorepo/blob/main/src/systems/dev/backstage/catalog/catalog-info.yaml
 
     # Ourstage entities catalog.
+    # NOTE: file locations are relative to the backend process,
+    # typically `packages/backend`.
     - type: file
       target: ../../catalog-info.yaml
