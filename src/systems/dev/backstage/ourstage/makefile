@@ -1,3 +1,5 @@
+python3 := python3
+
 ourstage_backend_port := 7007
 ourstage_backend_container_port := 7007
 ourstage_backend_env := dev
@@ -8,12 +10,25 @@ ourstage_backend_container_name := ourstage-backend-$(ourstage_backend_env)
 
 all: install-dependencies install check
 
-.PHONY: install-dependencies
-install-dependencies:
-	@echo "Installing ourstage dependencies..."
+.PHONY: install-dependencies-node
+install-dependencies-node:
+	@echo "Installing ourstage node dependencies..."
 	@npm_config_loglevel=error yarn install --immutable
 	@yarn workspaces foreach --all --interlaced run install --immutable
-	@echo "Successfully installed ourstage dependencies."
+	@echo "Successfully installed ourstage node dependencies."
+
+.PHONY: install-python-venv
+install-python-venv:
+	@$(python3) -m venv ./.venv
+
+.PHONY: install-dependencies-python
+install-dependencies-python: install-python-venv
+	@activate_file_path="$(shell find ./.venv -name activate -type f)" \
+	&& . "$$activate_file_path" \
+	&& node ./install-dependencies-python.js
+
+.PHONY: install-dependencies
+install-dependencies: install-dependencies-node install-dependencies-python
 .PHONY: init
 init: install-dependencies
 
@@ -131,6 +146,8 @@ shutdown: down
 .PHONY: upgrade
 upgrade:
 	@echo "Upgrading ourstage..."
+	@python -m venv ./.venv
+	@. $(python_venv_activate_file_path) && python3 -m pip install --upgrade pip
 	@yarn upgrade-interactive
 	@echo "Successfully upgraded ourstage."
 
