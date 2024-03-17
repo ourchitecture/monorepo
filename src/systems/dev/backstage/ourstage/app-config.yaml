@@ -18,9 +18,16 @@ backend:
     # Uncomment the following host directive to bind to specific interfaces
     # host: 127.0.0.1
   csp:
-    connect-src: ["'self'", 'http:', 'https:']
+    connect-src:
+      - "'self'"
+      - 'http:'
+      - 'https:'
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
-    img-src: ["'self'", 'data:', 'https://avatars.githubusercontent.com', 'https://media.licdn.com']
+    img-src:
+      - "'self'"
+      - 'data:'
+      - 'https://avatars.githubusercontent.com'
+      - 'https://media.licdn.com'
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
     origin: http://localhost:3000
