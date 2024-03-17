@@ -213,7 +213,7 @@ pr:
 		--repo ourchitecture/monorepo \
 		--base main \
 		--fill-first \
-		--assignee @
+		--assignee @me
 .PHONY: pr-chore
 pr-chore: pr
 
