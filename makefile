@@ -99,7 +99,7 @@ shutdown: down
 .PHONY: upgrade
 upgrade:
 	@echo "Upgrading monorepo..."
-	@yarn upgrade-interactive --latest
+	@yarn upgrade-interactive
 	@echo "Successfully upgraded monorepo."
 
 	@echo "Upgrading independent projects..."

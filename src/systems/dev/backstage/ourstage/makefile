@@ -131,7 +131,7 @@ shutdown: down
 .PHONY: upgrade
 upgrade:
 	@echo "Upgrading ourstage..."
-	@yarn upgrade-interactive --latest
+	@yarn upgrade-interactive
 	@echo "Successfully upgraded ourstage."
 
 .PHONY: clean
