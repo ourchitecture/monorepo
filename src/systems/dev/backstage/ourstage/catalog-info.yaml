@@ -4,30 +4,78 @@ kind: System
 metadata:
     annotations:
         backstage.io/techdocs-ref: dir:.
-    name: ourstage
     description: The Ourchitecture Developer Portal
+    links:
+        - title: Ourstage
+          url: https://localhost:7007/
+    name: ourstage
 spec:
     owner: ourchitecture
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-    name: ourstage-web
     description: Ourstage Developer Portal website
+    links:
+        - title: Ourstage
+          url: http://localhost:7007/
+    name: ourstage-web
 spec:
     consumesApis:
-        - ourstage-api
+        - ourstage-auth-api
+        - ourstage-catalog-api
+        - ourstage-search-api
     lifecycle: experimental
     owner: ourchitecture
     system: ourstage
     type: website
 ---
 apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+    description: Ourstage Authentication API
+    name: ourstage-auth-api
+spec:
+    definition: ./catalog/apis/auth.yaml
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ourstage
+    type: openapi
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+    description: Ourstage Catalog API
+    name: ourstage-catalog-api
+spec:
+    definition: ./catalog/apis/catalog.yaml
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ourstage
+    type: openapi
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+    description: Ourstage Search API
+    name: ourstage-search-api
+spec:
+    definition: ./catalog/apis/search.yaml
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ourstage
+    type: openapi
+---
+apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-    name: ourstage-service
     description: Ourstage Developer Portal Service
+    name: ourstage-service
 spec:
+    providesApis:
+        - ourstage-auth-api
+        - ourstage-catalog-api
+        - ourstage-search-api
     lifecycle: experimental
     owner: ourchitecture
     system: ourstage

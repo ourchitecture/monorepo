@@ -1,8 +1,11 @@
-const stopContainer = async (execa) => {
-    console.log('\nStopping ourstage...')
+import buildContainer from './modules/build-container.mjs'
+import buildStorageVolume from './modules/create-storage-volume.mjs'
 
-    const ourstageEnv = process.env.OURSTAGE_ENV.toLocaleLowerCase()
-    const containerName = `ourstage-backend-${ourstageEnv}`
+const startContainer = async (execa) => {
+    console.log('\nStarting ournexus...')
+
+    const imageName = `${process.env.OURNEXUS_IMAGE_NAME}:${process.env.OURNEXUS_IMAGE_TAG}`
+    const containerName = `ournexus`
 
     const containerIsAlreadyRunningArgv = [
         'ps',
@@ -34,7 +37,17 @@ const stopContainer = async (execa) => {
         containerIsAlreadyRunningCommandOutput &&
         containerIsAlreadyRunningCommandOutput.length > 0
     ) {
-        const runArgv = ['rm', '--force', containerName]
+        console.log('Ournexus is already running at http://localhost:8081.')
+    } else {
+        const runArgv = [
+            'run',
+            '--detach',
+            `--name=${containerName}`,
+            '--network=host',
+            '--user=nexus',
+            '--volume=ournexus-data:/nexus-data',
+            imageName,
+        ]
 
         const runContainerCommandResult = await execa('docker', runArgv, {
             cleanup: true,
@@ -46,11 +59,13 @@ const stopContainer = async (execa) => {
         })
 
         if (runContainerCommandResult.failed) {
-            throw new Error('Failed to stop the container.')
+            throw new Error('Failed to start the container.')
         }
+
+        console.log('Ournexus is running at http://localhost:8081.')
     }
 
-    console.log('Successfully stopped ourstage.')
+    console.log('Successfully started ournexus.')
 }
 
 const main = async (argv) => {
@@ -58,7 +73,9 @@ const main = async (argv) => {
 
     const execa = (await import('execa')).execa
 
-    await stopContainer(execa)
+    await buildStorageVolume(execa)
+    await buildContainer(execa)
+    await startContainer(execa)
 }
 
 ;(async () => {

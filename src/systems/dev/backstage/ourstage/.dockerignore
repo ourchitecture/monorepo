@@ -13,5 +13,3 @@ packages/backend/dev.containerfile
 packages/backend/prod.containerfile
 
 *.log
-
-app-config.local.yaml

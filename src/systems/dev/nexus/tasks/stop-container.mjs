@@ -1,11 +1,7 @@
-import buildContainer from './modules/build-container.mjs'
+const stopContainer = async (execa) => {
+    console.log('\nStopping ournexus...')
 
-const debugContainer = async (execa) => {
-    console.log('\nDebugging ourstage...')
-
-    const ourstageEnv = process.env.OURSTAGE_ENV.toLocaleLowerCase()
-    const imageName = `${process.env.OURSTAGE_BACKEND_IMAGE_NAME}-${ourstageEnv}:${process.env.OURSTAGE_BACKEND_IMAGE_TAG}`
-    const containerName = `ourstage-backend-${ourstageEnv}`
+    const containerName = `ournexus`
 
     const containerIsAlreadyRunningArgv = [
         'ps',
@@ -37,20 +33,7 @@ const debugContainer = async (execa) => {
         containerIsAlreadyRunningCommandOutput &&
         containerIsAlreadyRunningCommandOutput.length > 0
     ) {
-        console.log('Ourstage is already running at http://localhost:7007.')
-        console.log('To debug, run `make stop` and then `make debug`.')
-    } else {
-        const runArgv = [
-            'run',
-            '--entrypoint=/bin/bash',
-            '--interactive',
-            `--name=debug-${containerName}`,
-            '--network=host',
-            '--rm',
-            '--tty',
-            '--user=node',
-            imageName,
-        ]
+        const runArgv = ['rm', '--force', containerName]
 
         const runContainerCommandResult = await execa('docker', runArgv, {
             cleanup: true,
@@ -62,11 +45,11 @@ const debugContainer = async (execa) => {
         })
 
         if (runContainerCommandResult.failed) {
-            throw new Error('Failed to start the container.')
+            throw new Error('Failed to stop the container.')
         }
     }
 
-    console.log('Successfully debugged ourstage.')
+    console.log('Successfully stopped ournexus.')
 }
 
 const main = async (argv) => {
@@ -74,8 +57,7 @@ const main = async (argv) => {
 
     const execa = (await import('execa')).execa
 
-    await buildContainer(execa)
-    await debugContainer(execa)
+    await stopContainer(execa)
 }
 
 ;(async () => {

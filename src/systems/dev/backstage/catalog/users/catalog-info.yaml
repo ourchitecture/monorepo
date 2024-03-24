@@ -2,7 +2,6 @@
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-    name: ourchitectureio
     links:
         - icon: github
           title: GitHub
@@ -10,6 +9,7 @@ metadata:
         - icon: twitter
           title: Twitter
           url: https://twitter.com/ourchitectureio
+    name: ourchitectureio
 spec:
     profile:
         displayName: Ourchitecture Automation
@@ -19,7 +19,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-    name: ericis
     links:
         - icon: github
           title: GitHub
@@ -27,6 +26,7 @@ metadata:
         - icon: linkedin
           title: LinkedIn
           url: https://linkedin.com/in/iseric
+    name: ericis
 spec:
     profile:
         displayName: Eric Swanson

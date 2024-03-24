@@ -3,13 +3,13 @@ apiVersion: backstage.io/v1alpha1
 kind: Group
 metadata:
     description: The Ourchitecture team
-    name: ourchitecture
     links:
         - title: Ourchitecture.io
           url: http://ourchitecture.io
         - icon: github
           title: Ourchitecture @GitHub
           url: http://github.com/ourchitectureio
+    name: ourchitecture
 spec:
     children: []
     profile:

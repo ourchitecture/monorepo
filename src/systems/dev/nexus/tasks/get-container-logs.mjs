@@ -1,8 +1,7 @@
-const stopContainer = async (execa) => {
-    console.log('\nStopping ourstage...')
+const getContainerLogs = async (execa) => {
+    console.log('\nRetrieving ournexus logs...')
 
-    const ourstageEnv = process.env.OURSTAGE_ENV.toLocaleLowerCase()
-    const containerName = `ourstage-backend-${ourstageEnv}`
+    const containerName = `ournexus`
 
     const containerIsAlreadyRunningArgv = [
         'ps',
@@ -34,7 +33,7 @@ const stopContainer = async (execa) => {
         containerIsAlreadyRunningCommandOutput &&
         containerIsAlreadyRunningCommandOutput.length > 0
     ) {
-        const runArgv = ['rm', '--force', containerName]
+        const runArgv = ['logs', containerName]
 
         const runContainerCommandResult = await execa('docker', runArgv, {
             cleanup: true,
@@ -46,11 +45,11 @@ const stopContainer = async (execa) => {
         })
 
         if (runContainerCommandResult.failed) {
-            throw new Error('Failed to stop the container.')
+            throw new Error('Failed to retreive container logs.')
         }
     }
 
-    console.log('Successfully stopped ourstage.')
+    console.log('Successfully retrieved ournexus logs.')
 }
 
 const main = async (argv) => {
@@ -58,7 +57,7 @@ const main = async (argv) => {
 
     const execa = (await import('execa')).execa
 
-    await stopContainer(execa)
+    await getContainerLogs(execa)
 }
 
 ;(async () => {

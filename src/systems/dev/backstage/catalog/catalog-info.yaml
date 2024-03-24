@@ -10,4 +10,5 @@ metadata:
 spec:
     targets:
         - ./groups/catalog-info.yaml
+        - ./systems/catalog-info.yaml
         - ./users/catalog-info.yaml

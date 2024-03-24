@@ -2,7 +2,6 @@ const getContainerLogs = async (execa) => {
     console.log('\nRetrieving ourstage logs...')
 
     const ourstageEnv = process.env.OURSTAGE_ENV.toLocaleLowerCase()
-    const imageName = `${process.env.OURSTAGE_BACKEND_IMAGE_NAME}-${ourstageEnv}:${process.env.OURSTAGE_BACKEND_IMAGE_TAG}`
     const containerName = `ourstage-backend-${ourstageEnv}`
 
     const containerIsAlreadyRunningArgv = [

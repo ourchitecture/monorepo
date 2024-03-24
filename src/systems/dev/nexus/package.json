@@ -1,0 +1,8 @@
+{
+    "name": "@ourchitecture/ournexus",
+    "packageManager": "yarn@4.1.1",
+    "devDependencies": {
+        "dotenv": "^16.4.5",
+        "execa": "^8.0.1"
+    }
+}

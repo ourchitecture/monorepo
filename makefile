@@ -1,9 +1,16 @@
 .DEFAULT_GOAL:=all
 
-all: install-dependencies install check
+all: install check
+
+.PHONY: start-ournexus
+start-ournexus:
+	@echo "Starting ournexus..."
+	@yarn workspaces focus @ourchitecture/ournexus
+	@cd ./src/systems/dev/nexus && make start
+	@echo "Successfully started ournexus."
 
 .PHONY: install-dependencies
-install-dependencies:
+install-dependencies: start-ournexus
 	@echo "Installing monorepo dependencies..."
 	@npm_config_loglevel=error yarn install --immutable
 	@yarn workspaces foreach --all --interlaced run install --immutable
@@ -16,7 +23,7 @@ install-dependencies:
 init: install-dependencies
 
 .PHONY: install
-install:
+install: install-dependencies
 	@echo "Installing independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully installed independent projects."
@@ -75,6 +82,7 @@ format:
 .PHONY: up
 up:
 	@echo "Starting the system..."
+	@cd ./src/systems/dev/nexus && make $@
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully started the system."
 .PHONY: start
@@ -90,11 +98,15 @@ run: up
 down:
 	@echo "Stopping the system..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
-	@echo "Stopping started the system."
+	@cd ./src/systems/dev/nexus && make $@
+	@echo "Successfully stopped the system."
 .PHONY: stop
 stop: down
 .PHONY: shutdown
 shutdown: down
+
+.PHONY: restart
+restart: down up
 
 .PHONY: upgrade
 upgrade:
@@ -115,6 +127,7 @@ clean:
 
 	@echo "Cleaning independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@cd ./src/systems/dev/nexus && make $@
 	@echo "Successfully cleaned independent projects."
 
 .PHONY: reset
@@ -129,6 +142,7 @@ reset: clean
 
 	@echo "Resetting independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@cd ./src/systems/dev/nexus && make $@
 	@echo "Successfully reset independent projects."
 
 ################################################################################

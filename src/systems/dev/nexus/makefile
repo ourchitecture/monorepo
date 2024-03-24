@@ -16,26 +16,11 @@ install-storage:
 
 .PHONY: install
 install:
-	@echo "Installing nexus container..."
-	@docker build \
-		--file ./containerfile \
-		--network=host \
-		--tag $(nexus_image_name) \
-		./
-	@echo "Successfully installed nexus container."
+	@node ./tasks/install-container.mjs
 
 .PHONY: up
 up: install
-	@echo "Starting nexus container..."
-	@docker run \
-		--name $(nexus_container_name) \
-		--network host \
-		--detach \
-		--volume $(nexus_data_volume_name):/nexus-data \
-		$(nexus_image_name)
-	@printf "\n\nOur Nexus is running at http://localhost:$(nexus_port)\n\n"
-	@echo "Successfully started nexus container."
-
+	@node ./tasks/start-container.mjs
 .PHONY: start
 start: up
 .PHONY: startup
@@ -45,44 +30,54 @@ serve: up
 .PHONY: run
 run: up
 
+.PHONY: down
+down:
+	@node ./tasks/stop-container.mjs
+.PHONY: stop
+stop: down
+.PHONY: shutdown
+shutdown: down
+
+.PHONY: restart
+restart: down up
+
 .PHONY: debug
 debug: install
-	@echo "Starting ourstage..."
+	@echo "Debugging ournexus..."
 	@docker run \
-		--name debug-$(nexus_container_name) \
+		--name debug-ournexus \
 		--rm \
 		--interactive \
 		--tty \
 		--entrypoint /bin/bash \
-		--user node \
+		--user nexus \
 		--network host \
-		$(nexus_container_name)
-	@echo "Successfully started ourstage."
+		localhost/ournexus:latest
+	@echo "Successfully debugged ournexus."
 
 .PHONY: logs
 logs:
-	@echo "Retrieving ourstage logs..."
-ifndef follow
-	@docker logs $(nexus_container_name)
-else
-	@docker logs $(nexus_container_name) --follow
-endif
-	@echo "Retrieved ourstage logs."
+	@node ./tasks/get-container-logs.mjs
 
 .PHONY: clean
 clean:
-	@echo "Stopping ourstage..."
-	@docker rm --force $(nexus_container_name)
-	@echo "Stopping stopped ourstage."
-.PHONY: down
-down: clean
-.PHONY: stop
-stop: clean
-.PHONY: shutdown
-shutdown: clean
+	@"$(MAKE)" down || true
+	@echo "Cleaning ournexus..."
+	@rm --recursive --force \
+		./node_modules
+	@echo "Successfully cleaned ournexus."
 
 .PHONY: reset
 reset: clean
 	@echo "Resetting ourstage..."
-	@docker volume rm --force $(nexus_data_volume_name)
+	@docker rmi --force localhost/ournexus:latest || true
 	@echo "Successfully reset ourstage."
+
+.PHONY: reset-data
+reset-data:
+ifneq ($(confirm),1)
+	$(error Required argument confirm is not set to 1)
+endif
+	@echo "Resetting ournexus data..."
+	@docker volume rm --force ournexus-data || true
+	@echo "Successfully reset ournexus data."

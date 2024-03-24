@@ -100,7 +100,17 @@ run: up
 
 .PHONY: debug
 debug: install-container
-	@node ./tasks/debug-container.mjs
+	@echo "Debugging ourstage..."
+	@docker run \
+		--name debug-ourstage-backend-dev \
+		--rm \
+		--interactive \
+		--tty \
+		--entrypoint /bin/bash \
+		--user node \
+		--network host \
+		localhost/ourstage/backend-dev:latest
+	@echo "Successfully debugged ourstage."
 
 .PHONY: logs
 logs:
@@ -114,6 +124,9 @@ stop: down
 .PHONY: shutdown
 shutdown: down
 
+.PHONY: restart
+restart: down up
+
 .PHONY: upgrade
 upgrade:
 	@echo "Upgrading ourstage..."
@@ -124,6 +137,7 @@ update: upgrade
 
 .PHONY: clean
 clean:
+	@"$(MAKE)" down || true
 	@echo "Cleaning ourstage..."
 	@if [ -d "./node_modules" ]; then yarn run clean || true; fi
 	@echo "Successfully cleaned ourstage."
@@ -131,6 +145,8 @@ clean:
 .PHONY: reset
 reset: clean
 	@echo "Resetting ourstage..."
+	@docker rmi --force localhost/ourstage/backend-dev:latest || true
+	@docker rmi --force localhost/ourstage/backend-prod:latest || true
 	@rm --recursive --force \
 		./.yarn/cache \
 		./.yarn/install-state.gz \
