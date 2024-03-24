@@ -109,7 +109,7 @@ COPY --chown=node:node . ./
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
   rm --force ./yarn.lock \
   && cp yarn.lock.bak ./yarn.lock \
-  && make install check
+  && make format install check
 
 FROM dev_build as dev_release
 

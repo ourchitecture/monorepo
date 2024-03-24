@@ -25,7 +25,7 @@ install-python-venv:
 install-dependencies-python: install-python-venv
 	@activate_file_path="$(shell find ./.venv -name activate -type f)" \
 	&& . "$$activate_file_path" \
-	&& node ./install-dependencies-python.js
+	&& node ./tasks/install-dependencies-python.js
 
 .PHONY: install-dependencies
 install-dependencies: install-dependencies-node install-dependencies-python
@@ -78,14 +78,7 @@ format:
 
 .PHONY: install-container
 install-container:
-	@echo "Installing ourstage container ($(ourstage_backend_env))..."
-	@docker build \
-		--build-arg="NPM_REGISTRY_TOKEN=$$(cat .nexus-npm-password)" \
-		--file=./packages/backend/$(ourstage_backend_env).containerfile \
-		--network=host \
-		--tag=$(ourstage_backend_image_name) \
-		./
-	@echo "Successfully installed ourstage container ($(ourstage_backend_env))."
+	@node ./tasks/install-container.mjs
 
 .PHONY: local-dev
 local-dev:
@@ -95,15 +88,7 @@ local-dev:
 
 .PHONY: up
 up: install-container
-	@echo "Starting ourstage ($(ourstage_backend_env))..."
-	@docker run \
-		--detach \
-		--name $(ourstage_backend_container_name) \
-		--network host \
-		--user node \
-		$(ourstage_backend_image_name)
-	@printf "\n\nOurstage is running at http://localhost:$(ourstage_backend_port)\n\n"
-	@echo "Successfully started ourstage ($(ourstage_backend_env))."
+	@node ./tasks/start-container.mjs
 .PHONY: start
 start: up
 .PHONY: startup
@@ -115,29 +100,15 @@ run: up
 
 .PHONY: debug
 debug: install-container
-	@echo "Debugging ourstage ($(ourstage_backend_env))..."
-	@docker run \
-		--entrypoint /bin/bash \
-		--interactive \
-		--name debug-$(ourstage_backend_container_name) \
-		--network host \
-		--rm \
-		--tty \
-		--user node \
-		$(ourstage_backend_image_name)
-	@echo "Successfully debugged ourstage ($(ourstage_backend_env))."
+	@node ./tasks/debug-container.mjs
 
 .PHONY: logs
 logs:
-	@echo "Retrieving ourstage ($(ourstage_backend_env)) logs..."
-	@docker logs $(ourstage_backend_container_name)
-	@echo "Retrieved ourstage ($(ourstage_backend_env)) logs."
+	@node ./tasks/get-container-logs.mjs
 
 .PHONY: down
 down:
-	@echo "Stopping ourstage ($(ourstage_backend_env))..."
-	@docker rm --force $(ourstage_backend_container_name)
-	@echo "Stopping stopped ourstage ($(ourstage_backend_env))."
+	@node ./tasks/stop-container.mjs
 .PHONY: stop
 stop: down
 .PHONY: shutdown
@@ -146,10 +117,10 @@ shutdown: down
 .PHONY: upgrade
 upgrade:
 	@echo "Upgrading ourstage..."
-	@python -m venv ./.venv
-	@. $(python_venv_activate_file_path) && python3 -m pip install --upgrade pip
 	@yarn upgrade-interactive
 	@echo "Successfully upgraded ourstage."
+.PHONY: update
+update: upgrade
 
 .PHONY: clean
 clean:

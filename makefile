@@ -105,6 +105,8 @@ upgrade:
 	@echo "Upgrading independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully upgraded independent projects."
+.PHONY: update
+update: upgrade
 
 .PHONY: clean
 clean:

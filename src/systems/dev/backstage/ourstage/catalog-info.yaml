@@ -2,33 +2,33 @@
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
-  annotations:
-    backstage.io/techdocs-ref: dir:.
-  name: ourstage
-  description: The Ourchitecture Developer Portal
+    annotations:
+        backstage.io/techdocs-ref: dir:.
+    name: ourstage
+    description: The Ourchitecture Developer Portal
 spec:
-  owner: ourchitecture
+    owner: ourchitecture
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: ourstage-web
-  description: Ourstage Developer Portal website
+    name: ourstage-web
+    description: Ourstage Developer Portal website
 spec:
-  consumesApis:
-    - ourstage-api
-  lifecycle: experimental
-  owner: ourchitecture
-  system: ourstage
-  type: website
+    consumesApis:
+        - ourstage-api
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ourstage
+    type: website
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: ourstage-service
-  description: Ourstage Developer Portal Service
+    name: ourstage-service
+    description: Ourstage Developer Portal Service
 spec:
-  lifecycle: experimental
-  owner: ourchitecture
-  system: ourstage
-  type: service
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ourstage
+    type: service
