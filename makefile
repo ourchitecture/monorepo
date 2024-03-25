@@ -1,6 +1,9 @@
 .DEFAULT_GOAL:=all
 
-all: install check
+all: start-ournexus install-dependencies install check
+
+.PHONY: ci
+ci: install-dependencies install check
 
 .PHONY: start-ournexus
 start-ournexus:
@@ -10,7 +13,7 @@ start-ournexus:
 	@echo "Successfully started ournexus."
 
 .PHONY: install-dependencies
-install-dependencies: start-ournexus
+install-dependencies:
 	@echo "Installing monorepo dependencies..."
 	@npm_config_loglevel=error yarn install --immutable
 	@yarn workspaces foreach --all --interlaced run install --immutable
@@ -23,7 +26,7 @@ install-dependencies: start-ournexus
 init: install-dependencies
 
 .PHONY: install
-install: install-dependencies
+install:
 	@echo "Installing independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully installed independent projects."
