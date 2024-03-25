@@ -1,3 +1,5 @@
+python3 := python3
+
 ourstage_backend_port := 7007
 ourstage_backend_container_port := 7007
 ourstage_backend_env := dev
@@ -8,12 +10,25 @@ ourstage_backend_container_name := ourstage-backend-$(ourstage_backend_env)
 
 all: install-dependencies install check
 
-.PHONY: install-dependencies
-install-dependencies:
-	@echo "Installing ourstage dependencies..."
+.PHONY: install-dependencies-node
+install-dependencies-node:
+	@echo "Installing ourstage node dependencies..."
 	@npm_config_loglevel=error yarn install --immutable
 	@yarn workspaces foreach --all --interlaced run install --immutable
-	@echo "Successfully installed ourstage dependencies."
+	@echo "Successfully installed ourstage node dependencies."
+
+.PHONY: install-python-venv
+install-python-venv:
+	@$(python3) -m venv ./.venv
+
+.PHONY: install-dependencies-python
+install-dependencies-python: install-python-venv
+	@activate_file_path="$(shell find ./.venv -name activate -type f)" \
+	&& . "$$activate_file_path" \
+	&& node ./tasks/install-dependencies-python.js
+
+.PHONY: install-dependencies
+install-dependencies: install-dependencies-node install-dependencies-python
 .PHONY: init
 init: install-dependencies
 
@@ -63,14 +78,7 @@ format:
 
 .PHONY: install-container
 install-container:
-	@echo "Installing ourstage container ($(ourstage_backend_env))..."
-	@docker build \
-		--build-arg="NPM_REGISTRY_TOKEN=$$(cat .nexus-npm-password)" \
-		--file=./packages/backend/$(ourstage_backend_env).containerfile \
-		--network=host \
-		--tag=$(ourstage_backend_image_name) \
-		./
-	@echo "Successfully installed ourstage container ($(ourstage_backend_env))."
+	@node ./tasks/install-container.mjs
 
 .PHONY: local-dev
 local-dev:
@@ -80,15 +88,7 @@ local-dev:
 
 .PHONY: up
 up: install-container
-	@echo "Starting ourstage ($(ourstage_backend_env))..."
-	@docker run \
-		--detach \
-		--name $(ourstage_backend_container_name) \
-		--network host \
-		--user node \
-		$(ourstage_backend_image_name)
-	@printf "\n\nOurstage is running at http://localhost:$(ourstage_backend_port)\n\n"
-	@echo "Successfully started ourstage ($(ourstage_backend_env))."
+	@node ./tasks/start-container.mjs
 .PHONY: start
 start: up
 .PHONY: startup
@@ -100,42 +100,44 @@ run: up
 
 .PHONY: debug
 debug: install-container
-	@echo "Debugging ourstage ($(ourstage_backend_env))..."
+	@echo "Debugging ourstage..."
 	@docker run \
-		--entrypoint /bin/bash \
-		--interactive \
-		--name debug-$(ourstage_backend_container_name) \
-		--network host \
+		--name debug-ourstage-backend-dev \
 		--rm \
+		--interactive \
 		--tty \
+		--entrypoint /bin/bash \
 		--user node \
-		$(ourstage_backend_image_name)
-	@echo "Successfully debugged ourstage ($(ourstage_backend_env))."
+		--network host \
+		localhost/ourstage/backend-dev:latest
+	@echo "Successfully debugged ourstage."
 
 .PHONY: logs
 logs:
-	@echo "Retrieving ourstage ($(ourstage_backend_env)) logs..."
-	@docker logs $(ourstage_backend_container_name)
-	@echo "Retrieved ourstage ($(ourstage_backend_env)) logs."
+	@node ./tasks/get-container-logs.mjs
 
 .PHONY: down
 down:
-	@echo "Stopping ourstage ($(ourstage_backend_env))..."
-	@docker rm --force $(ourstage_backend_container_name)
-	@echo "Stopping stopped ourstage ($(ourstage_backend_env))."
+	@node ./tasks/stop-container.mjs
 .PHONY: stop
 stop: down
 .PHONY: shutdown
 shutdown: down
+
+.PHONY: restart
+restart: down up
 
 .PHONY: upgrade
 upgrade:
 	@echo "Upgrading ourstage..."
 	@yarn upgrade-interactive
 	@echo "Successfully upgraded ourstage."
+.PHONY: update
+update: upgrade
 
 .PHONY: clean
 clean:
+	@"$(MAKE)" down || true
 	@echo "Cleaning ourstage..."
 	@if [ -d "./node_modules" ]; then yarn run clean || true; fi
 	@echo "Successfully cleaned ourstage."
@@ -143,6 +145,8 @@ clean:
 .PHONY: reset
 reset: clean
 	@echo "Resetting ourstage..."
+	@docker rmi --force localhost/ourstage/backend-dev:latest || true
+	@docker rmi --force localhost/ourstage/backend-prod:latest || true
 	@rm --recursive --force \
 		./.yarn/cache \
 		./.yarn/install-state.gz \

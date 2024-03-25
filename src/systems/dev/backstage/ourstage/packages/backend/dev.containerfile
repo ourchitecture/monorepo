@@ -104,12 +104,13 @@ RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid
 
 # Copy the source code.
 # Restore the backup files.
+# Formatting is due to an issue with the `COPY` command.
 # Install and check the system.
 COPY --chown=node:node . ./
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
   rm --force ./yarn.lock \
   && cp yarn.lock.bak ./yarn.lock \
-  && make install check
+  && make format install check
 
 FROM dev_build as dev_release
 

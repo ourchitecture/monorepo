@@ -1,0 +1,57 @@
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-system
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+    description: The Ourchitecture Nexus Repository
+    links:
+        - title: Ournexus
+          url: http://localhost:8081/
+        - title: Sonatype Nexus Repository Open Source Software
+          url: https://www.sonatype.com/nexus-repository-oss
+    name: ournexus
+spec:
+    owner: ourchitecture
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+    description: Ournexus website
+    links:
+        - title: Ournexus
+          url: http://localhost:8081/
+    name: ourstage-web
+spec:
+    consumesApis:
+      - ournexus-api
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ournexus
+    type: website
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+    description: Ournexus API
+    name: ournexus-api
+spec:
+    definition: ./apis/ournexus/swagger.json
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ournexus
+    type: openapi
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+    description: Ournexus Service
+    links:
+        - title: Nexus ReST and Integration API
+          url: https://help.sonatype.com/en/rest-and-integration-api.html
+    name: ournexus-service
+spec:
+    providesApis:
+      - ournexus-api
+    lifecycle: experimental
+    owner: ourchitecture
+    system: ournexus
+    type: service

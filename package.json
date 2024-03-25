@@ -66,6 +66,7 @@
     },
     "workspaces": [
         "src/designs/**/*",
+        "src/systems/dev/nexus",
         "src/systems/leadof/**/*"
     ]
 }

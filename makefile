@@ -1,6 +1,18 @@
 .DEFAULT_GOAL:=all
 
-all: install-dependencies install check
+all:
+ifeq ($(CI),)
+	@"$(MAKE)" start-ournexus install-dependencies install check
+else
+	@"$(MAKE)" install-dependencies install check
+endif
+
+.PHONY: start-ournexus
+start-ournexus:
+	@echo "Starting ournexus..."
+	@yarn workspaces focus @ourchitecture/ournexus
+	@cd ./src/systems/dev/nexus && make start
+	@echo "Successfully started ournexus."
 
 .PHONY: install-dependencies
 install-dependencies:
@@ -75,6 +87,7 @@ format:
 .PHONY: up
 up:
 	@echo "Starting the system..."
+	@cd ./src/systems/dev/nexus && make $@
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully started the system."
 .PHONY: start
@@ -90,11 +103,15 @@ run: up
 down:
 	@echo "Stopping the system..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
-	@echo "Stopping started the system."
+	@cd ./src/systems/dev/nexus && make $@
+	@echo "Successfully stopped the system."
 .PHONY: stop
 stop: down
 .PHONY: shutdown
 shutdown: down
+
+.PHONY: restart
+restart: down up
 
 .PHONY: upgrade
 upgrade:
@@ -105,6 +122,8 @@ upgrade:
 	@echo "Upgrading independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
 	@echo "Successfully upgraded independent projects."
+.PHONY: update
+update: upgrade
 
 .PHONY: clean
 clean:
@@ -113,6 +132,7 @@ clean:
 
 	@echo "Cleaning independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@cd ./src/systems/dev/nexus && make $@
 	@echo "Successfully cleaned independent projects."
 
 .PHONY: reset
@@ -127,6 +147,7 @@ reset: clean
 
 	@echo "Resetting independent projects..."
 	@cd ./src/systems/dev/backstage/ourstage && make $@
+	@cd ./src/systems/dev/nexus && make $@
 	@echo "Successfully reset independent projects."
 
 ################################################################################

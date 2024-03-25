@@ -20,6 +20,7 @@
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
     "[dotenv]": {
+        "editor.formatOnSave": false,
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
     "[dockerfile]": {

@@ -5,8 +5,11 @@
 **/dist-types
 **/node_modules
 
-packages/backend/*.containerfile
+*.containerfile
+
+tasks
+
+packages/backend/dev.containerfile
+packages/backend/prod.containerfile
 
 *.log
-
-app-config.local.yaml

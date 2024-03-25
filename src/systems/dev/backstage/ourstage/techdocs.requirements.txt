@@ -1,0 +1,7 @@
+mkdocs==1.5.3
+
+# Caveat: Please install the mkdocs-techdocs-core package after all other
+# Python packages. The order is important to make sure we get correct
+# version of some of the dependencies.
+# Source: https://backstage.io/docs/features/techdocs/getting-started#disabling-docker-in-docker-situation-optional
+mkdocs-techdocs-core==1.3.5

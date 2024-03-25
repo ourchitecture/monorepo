@@ -114,4 +114,7 @@ COPY --chown=node:node ./catalog-info.yaml ./
 # Copy system configuration.
 COPY --chown=node:node ./app-config.yaml ./app-config.production.yaml ./
 
+# Do not allow local configuration to be present in the production image.
+RUN rm --force ./app-config.local.yaml
+
 CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]

@@ -1,0 +1,9 @@
+FROM httpd:2.4.58-alpine3.19@sha256:92535cf7f151901ba91b04186292c3bd5bf82aa6ffa6eb7bc405fefbffedd480
+
+# Copy the files.
+COPY . /usr/local/apache2/htdocs/
+
+# Move the configuration file.
+# Remove the default "index.html" file.
+RUN mv /usr/local/apache2/htdocs/httpd.conf /usr/local/apache2/conf/httpd.conf \
+  && rm /usr/local/apache2/htdocs/index.html
