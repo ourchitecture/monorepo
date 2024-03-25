@@ -1,9 +1,11 @@
 .DEFAULT_GOAL:=all
 
-all: start-ournexus install-dependencies install check
-
-.PHONY: ci
-ci: install-dependencies install check
+all:
+ifeq ($(CI),)
+	@"$(MAKE)" start-ournexus install-dependencies install check
+else
+	@"$(MAKE)" install-dependencies install check
+endif
 
 .PHONY: start-ournexus
 start-ournexus:

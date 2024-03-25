@@ -45,4 +45,4 @@ jobs:
 
             - id: make
               name: make
-              run: make ci
+              run: make
